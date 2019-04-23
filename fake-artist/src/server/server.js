@@ -1,12 +1,18 @@
+import * as Constants from "../Constants.js";
+
 const express = require('express');
 const server = express();
 const port = 3001;
 
-server.get('/hello', (request, response) => {
+const drawnLines = [];
+
+server.get('/canvas', (request, response) => {
     response.json({
-        data: 'Hello from Express!'
+        lines: drawnLines
     });
 });
+
+server.put()
 
 server.listen(port, (err) => {
     if (err) {
