@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import * as Constants from "../Constants.js";
 
+const LINE_WIDTH = 5;
+const LINE_JOIN = "round";
+
 /**
  * Canvas cannot have a border. Drawing logic depends on that.
  * TODO: write a test to ensure that it doesnt have a border
@@ -25,99 +28,161 @@ class Canvas extends Component {
         x: 0,
         y: 0
       },
-      drawnLines: []
+      completedLines: []
     };
 
   }
 
   render() {
+    // do not redraw on first render because this.canvas is set in the canvas ref
+    if (this.canvas) {
+      this.redrawCanvas();
+    }
+
+    // TODO: remove once x|y display is removed
     const { x, y } = this.state.mouse;
-    return (<div>
-      <canvas
-        id="draw-area"
-        width="600px" // must be set like this, css width/height scales instead of making the canvas larger/smaller
-        height="450px"
-        onMouseDown={event => { this.startDrawing(); this.draw(event); }}
-        onMouseUp={event => this.stopDrawing()}
-        onMouseLeave={event => this.stopDrawing()}
-        onMouseMove={this.draw}
-        ref={canvas => this.canvas = canvas} />
+
+    return (
       <div>
-        x: {x}<br />
-        y: {y}
-      </div>
-    </div>);
+        <canvas
+          id="draw-area"
+          width="600px" // must be set like this, css width/height scales instead of making the canvas larger/smaller
+          height="450px"
+          onMouseDown={event => { this.startDrawing(); this.draw(event); }}
+          onMouseUp={this.stopDrawing}
+          onMouseLeave={this.stopDrawing}
+          onMouseMove={this.draw}
+          ref={canvas => this.canvas = canvas} />
+        <div>
+          x: {x}<br />
+          y: {y}
+        </div>
+      </div>);
   }
 
-  onComponentMounted() {
-    //this.canvasInterval = setInterval(this.fetchCanvasState, 50);
+  componentDidMount() {
+    this.startFetchCycle();
   }
+
+  redrawCanvas = () => {
+    console.log("redrawing canvas");
+
+    const context = this.canvas.getContext("2d");
+    // clear the canvas completely
+    context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    context.lineJoin = LINE_JOIN;
+    context.lineWidth = LINE_WIDTH;
+    // draw the current state
+    const { completedLines } = this.state;
+    completedLines.forEach(line => {
+
+      context.strokeStyle = "#FF0000"; // TODO: have the line color in the json
+      context.beginPath();
+      line.forEach((point, index) => {
+
+        // the first point sets the starting point of the line
+        if (index === 0) {
+          context.moveTo(point.x, point.y);
+        } else {
+          context.lineTo(point.x, point.y);
+        }
+
+        // "lines" that consist of one point need a line to themselves and a closed path to appear
+        // otherwise they are not drawn on the canvas
+        if(line.length === 1){
+          context.lineTo(point.x, point.y);
+          context.closePath();
+        }
+
+      });
+      context.stroke();
+
+    });
+  };
 
   /**
    * request canvas state from server
    */
   fetchCanvasState = () => {
-    fetch(`${Constants.SERVER_ADDRESS}/${Constants.FETCH_STATE}`, {
-      method: "GET"
+    console.log(`fetching from ${Constants.SERVER_ADDRESS}${Constants.GET_STATE}`);
+    fetch(`${Constants.SERVER_ADDRESS}${Constants.GET_STATE}`, {
+      method: "GET",
     })
-    .then(response => response.json())
-    .then(json => {
-      this.setState({
-        drawnLines: json.lines
+      .then(response => response.json())
+      .then(json => {
+
+        this.setState({
+          completedLines: json[Constants.GET_STATE_LINES]
+        });
+      })
+      .catch(error => {
+        // TODO display connection status somewhere
       });
-    });
   }
 
   /**
    * push new canvas line to server
    */
   putCanvasLine = (line) => {
-    const payload = {
-      line: line
+    const requestBody = {
+      [Constants.PUT_LINE_FINISHED_LINE]: line
     };
 
     //console.log("sending " + JSON.stringify(payload));
 
-    fetch(`http://${Constants.SERVER_ADDRESS}/${Constants.PUT_LINE}`, {
-      method: "PUT", 
-      body: JSON.stringify(payload),
+    fetch(`${Constants.SERVER_ADDRESS}${Constants.PUT_LINE}`, {
+      method: "PUT",
+      body: JSON.stringify(requestBody),
       headers: {
-        "Content-Type" : "application/json",
-        "Access-Control-Allow-Origin": "http://localhost:3001/*"
+        "Content-Type": "application/json"
       }
     })
-    .then(response => response.json())
-    .then(json => {
-      console.log(json);
-    });
+      .then(response => response.json())
+      .then(json => {
+        console.log(json);
+      })
+      .catch(error => {
+        // TODO: re-send
+      });
 
   };
 
   startDrawing = () => {
     this.isDrawing = true;
     this.currentLine = [];
+
+    const { completedLines } = this.state;
+    completedLines.push(this.currentLine);
+
+    this.setState({
+      completedLines: completedLines
+    });
+
+    //disable fetching while drawing
+    this.stopFetchCycle();
+
   };
 
   stopDrawing = () => {
     // if drawing was disabled before, do not go through the line saving process
-    if(!this.isDrawing){
+    if (!this.isDrawing) {
       return;
     }
-    
+
     // further mouse movement doesnt draw on canvas
     this.isDrawing = false;
-    const { drawnLines } = this.state;
-
+    
     // send drawn line to server
     this.putCanvasLine(this.currentLine);
     console.log("line sent");
-
-    // add completed line to drawnLines state
-    drawnLines.push(this.currentLine);
-
+    
+    const { completedLines } = this.state;
+    completedLines.push(this.currentLine);
     this.setState({
-      drawnLines: drawnLines
+      completedLines: completedLines
     });
+
+    this.startFetchCycle();
   };
 
   draw = event => {
@@ -125,18 +190,16 @@ class Canvas extends Component {
       return;
     }
 
-    // small timesavers for typing ^-^
-    const canvas = this.canvas;
-
     // get coordinates
     const { startPoint, endPoint } = this.getLineCoordinates(event);
+    this.currentLine.push(endPoint);
 
     // prepare drawing
-    const context = canvas.getContext("2d");
+    const context = this.canvas.getContext("2d");
     // set pen properties
     context.strokeStyle = "#FF0000";
-    context.lineJoin = "round";
-    context.lineWidth = 5;
+    context.lineJoin = LINE_JOIN;
+    context.lineWidth = LINE_WIDTH;
 
     // draw line
     context.beginPath();
@@ -151,6 +214,9 @@ class Canvas extends Component {
     });
   };
 
+  /**
+   * returns mouse coordinates relative to the canvas
+   */
   getLineCoordinates = (event) => {
     // position of the canvas
     const { x, y } = this.canvas.getBoundingClientRect();
@@ -162,24 +228,27 @@ class Canvas extends Component {
       y: clientY - y
     };
 
-    const currentLine = this.currentLine;
-    currentLine.push(relativeMousePos);
+    const numberOfPoints = this.currentLine.length;
 
-    const numberOfPoints = currentLine.length;
-    const startPointIndex = numberOfPoints - 2 >= 0 ? numberOfPoints - 2 : 0;
-    const endPointIndex = numberOfPoints - 1;
-
-    const startPoint = {
-      x: currentLine[startPointIndex].x,
-      y: currentLine[startPointIndex].y
-    };
-    const endPoint = {
-      x: currentLine[endPointIndex].x,
-      y: currentLine[endPointIndex].y
-    };
+    // mouse position is where the line currently ends
+    const endPoint = relativeMousePos;
+    // if the line already has points, use the last one as startPoint
+    // if it doesn't (e.g. when starting a new line), use the endPoint as startPoint
+    const startPoint = numberOfPoints === 0 ? endPoint : this.currentLine[numberOfPoints - 1];
 
     return { startPoint, endPoint };
   };
+
+  startFetchCycle = () => {
+    if(!this.canvasFetchInterval){
+      this.canvasFetchInterval = setInterval(this.fetchCanvasState, 1000);
+    }
+  };
+
+  stopFetchCycle = () => {
+    clearInterval(this.canvasFetchInterval);
+    this.canvasFetchInterval = null;
+  }
 
 }
 
