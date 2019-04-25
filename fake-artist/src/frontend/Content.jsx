@@ -6,7 +6,7 @@ class Content extends Component {
   render() {
     return (
       <div>
-        <Canvas />
+        <Canvas color="#0000FF" />
       </div>
     );
   }

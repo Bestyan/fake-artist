@@ -34,13 +34,16 @@ const completedLines = [];
  *   points: [ {x: 0, y: 0}, {...} ]
  * }
  */
-let incompleteLine = [];
+let incompleteLine = {
+    color: "#FFFFFF",
+    points: []
+};
 
 // GET GET_STATE
 server.get(`${Constants.GET_STATE}`, (request, response) => {
 
     const lines = completedLines.slice(0);
-    if (incompleteLine || incompleteLine.points) {
+    if (incompleteLine.points) {
         lines.push(incompleteLine);
     }
 
@@ -59,7 +62,11 @@ server.put(`${Constants.PUT_LINE}`, (request, response) => {
     completedLines.push(data[Constants.PUT_LINE_FINISHED_LINE]);
 
     // reset incomplete line
-    incompleteLine = [];
+    // there is no check required, because updates on a new line aren't allowed until the last one has been submitted
+    incompleteLine = {
+        color: "#FFFFFF",
+        points: []
+    };
 
     console.log(data);
 
@@ -77,7 +84,7 @@ server.post(`${Constants.POST_LINE}`, (request, response) => {
     let status = null;
     let message = null;
     // check whether previous line has been submitted as finished or its color matches
-    if (!incompleteLine || incompleteLine.color == updatedLine.color) {
+    if (incompleteLine.points.length === 0 || incompleteLine.color == updatedLine.color) {
         incompleteLine = updatedLine;
         status = "success";
         message = "line updated";
@@ -89,7 +96,7 @@ server.post(`${Constants.POST_LINE}`, (request, response) => {
     response.json({
         [Constants.RESPONSE_STATUS]: status,
         [Constants.RESPONSE_MESSAGE]: message
-    })
+    });
 
 })
 

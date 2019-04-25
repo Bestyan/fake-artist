@@ -1,24 +1,37 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import * as Constants from "../Constants.js";
+import PropTypes from "prop-types";
+import * as communication from "./communication";
 
 const LINE_WIDTH = 5;
 const LINE_JOIN = "round";
+const SYNC_INTERVAL_MS = 500;
 
 /**
  * Canvas cannot have a border. Drawing logic depends on that.
  * TODO: write a test to ensure that it doesnt have a border
  */
-class Canvas extends Component {
+class Canvas extends PureComponent {
   // whether the user is currently drawing (holding the mouse down)
   isDrawing = false;
-  // holds the coordinates of the line that is currently being drawn
-  // [{x: 0, y: 0}, {...}]
-  currentLine = [];
-  // holds the interval that queries the canvas state from the server
-  canvasInterval = null;
+  /* holds the coordinates of the line that is currently being drawn
+   * {
+   *  color: "#FF0000",
+   *  points: [{x: 0, y: 0}, {...}]
+   * }
+   */
+  currentLine = {
+    color: this.props.color,
+    points: []
+  };
+  // interval that queries the canvas state from the server
+  canvasFetchInterval = null;
+  // interval that pushes updates on the currently drawn line to the server
+  updateCurrentLineInterval = null;
 
-  constructor() {
-    super();
+
+  constructor(props) {
+    super(props);
 
     /**
      * TODO: remove mouse from state once drawing logic stands.
@@ -28,7 +41,7 @@ class Canvas extends Component {
         x: 0,
         y: 0
       },
-      completedLines: []
+      canvasLines: []
     };
 
   }
@@ -73,12 +86,12 @@ class Canvas extends Component {
     context.lineJoin = LINE_JOIN;
     context.lineWidth = LINE_WIDTH;
     // draw the current state
-    const { completedLines } = this.state;
-    completedLines.forEach(line => {
+    const { canvasLines } = this.state;
+    canvasLines.forEach(line => {
 
-      context.strokeStyle = "#FF0000"; // TODO: have the line color in the json
+      context.strokeStyle = line.color;
       context.beginPath();
-      line.forEach((point, index) => {
+      line.points.forEach((point, index) => {
 
         // the first point sets the starting point of the line
         if (index === 0) {
@@ -89,7 +102,7 @@ class Canvas extends Component {
 
         // "lines" that consist of one point need a line to themselves and a closed path to appear
         // otherwise they are not drawn on the canvas
-        if (line.length === 1) {
+        if (line.points.length === 1) {
           context.lineTo(point.x, point.y);
           context.closePath();
         }
@@ -104,86 +117,71 @@ class Canvas extends Component {
    * request canvas state from server
    */
   fetchCanvasState = () => {
-    console.log(`fetching from ${Constants.SERVER_ADDRESS}${Constants.GET_STATE}`);
-    fetch(`${Constants.SERVER_ADDRESS}${Constants.GET_STATE}`, {
-      method: "GET",
-    })
-      .then(response => response.json())
-      .then(json => {
+    communication.fetchCanvasState(
+      json => {
+        const lines = json[Constants.GET_STATE_LINES];
+        // in case it's a delayed fetch and drawing has started in the meantime
+        if (this.currentLine.points.length > 0) {
+          lines.push(this.currentLine);
+        }
 
         this.setState({
-          completedLines: json[Constants.GET_STATE_LINES]
+          canvasLines: lines
         });
-      })
-      .catch(error => {
+      },
+      error => {
+        console.log(error);
         // TODO display connection status somewhere
-      });
+      }
+    );
   }
 
   /**
    * push new canvas line to server
    */
   putCanvasLine = (line) => {
-    const requestBody = {
-      [Constants.PUT_LINE_FINISHED_LINE]: line
-    };
-
-    //console.log("sending " + JSON.stringify(payload));
-
-    fetch(`${Constants.SERVER_ADDRESS}${Constants.PUT_LINE}`, {
-      method: "PUT",
-      body: JSON.stringify(requestBody),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(response => response.json())
-      .then(json => {
+    communication.putCanvasLine(
+      line,
+      json => {
         console.log(json);
-      })
-      .catch(error => {
+      },
+      error => {
+        console.log(error);
         // TODO: re-send
-      });
-
+      }
+    );
   };
 
   /**
    * push state of currently drawn line to server
    */
   updateCurrentLine = () => {
-    const requestBody = {
-      [Constants.POST_LINE_INCOMPLETE_LINE]: this.currentLine
-    };
-
-    fetch(`${Constants.SERVER_ADDRESS}${Constants.POST_LINE}`, {
-      method: "POST",
-      body: JSON.stringify(requestBody),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(response => response.json())
-      .then(json => {
+    communication.updateCurrentLine(
+      this.currentLine,
+      json => {
         console.log(json);
-      })
-      .catch(error => {
-        // TODO
+      },
+      error => {
+        console.log(error);
       });
   };
 
   startDrawing = () => {
-    this.isDrawing = true;
-    this.currentLine = [];
-
-    const { completedLines } = this.state;
-    completedLines.push(this.currentLine);
-
-    this.setState({
-      completedLines: completedLines
-    });
-
     // disable fetching while drawing
     this.stopFetchCycle();
+
+    this.isDrawing = true;
+    // reset currentLine reference
+    this.currentLine = {
+      color: this.props.color,
+      points: []
+    };
+
+    const { canvasLines } = this.state;
+    canvasLines.push(this.currentLine);
+    // trigger render
+    this.setState(this.state);
+
     // update the server on the currently drawn line
     this.startUpdateCycle();
 
@@ -205,12 +203,6 @@ class Canvas extends Component {
     this.putCanvasLine(this.currentLine);
     console.log("line sent");
 
-    const { completedLines } = this.state;
-    completedLines.push(this.currentLine);
-    this.setState({
-      completedLines: completedLines
-    });
-
     this.startFetchCycle();
   };
 
@@ -221,7 +213,9 @@ class Canvas extends Component {
 
     // get coordinates
     const { startPoint, endPoint } = this.getLineCoordinates(event);
-    this.currentLine.push(endPoint);
+    this.currentLine.points.push(endPoint);
+    // trigger a re-render
+    this.setState(this.state);
 
     // prepare drawing
     const context = this.canvas.getContext("2d");
@@ -252,25 +246,25 @@ class Canvas extends Component {
     // position of the mouse in browser window
     const { clientX: mouseX, clientY: mouseY } = event;
 
-    const relativeMousePos = {
+    const relativeMousePosition = {
       x: mouseX - canvasX,
       y: mouseY - canvasY
     };
 
-    const numberOfPoints = this.currentLine.length;
+    const numberOfPoints = this.currentLine.points.length;
 
     // mouse position is where the line currently ends
-    const endPoint = relativeMousePos;
+    const endPoint = relativeMousePosition;
     // if the line already has points, use the last one as startPoint
     // if it doesn't (e.g. when starting a new line), use the endPoint as startPoint
-    const startPoint = numberOfPoints === 0 ? endPoint : this.currentLine[numberOfPoints - 1];
+    const startPoint = numberOfPoints === 0 ? endPoint : this.currentLine.points[numberOfPoints - 1];
 
     return { startPoint, endPoint };
   };
 
   startFetchCycle = () => {
     if (!this.canvasFetchInterval) {
-      this.canvasFetchInterval = setInterval(this.fetchCanvasState, 50);
+      this.canvasFetchInterval = setInterval(this.fetchCanvasState, SYNC_INTERVAL_MS);
     }
   };
 
@@ -281,7 +275,7 @@ class Canvas extends Component {
 
   startUpdateCycle = () => {
     if (!this.updateCurrentLineInterval) {
-      this.updateCurrentLineInterval = setInterval(this.updateCurrentLine, 50);
+      this.updateCurrentLineInterval = setInterval(this.updateCurrentLine, SYNC_INTERVAL_MS);
     }
   }
 
@@ -290,6 +284,10 @@ class Canvas extends Component {
     this.updateCurrentLineInterval = null;
   }
 
+}
+
+Canvas.propTypes = {
+  color: PropTypes.string.isRequired
 }
 
 export default Canvas;
