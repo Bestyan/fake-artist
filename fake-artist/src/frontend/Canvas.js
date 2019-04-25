@@ -89,7 +89,7 @@ class Canvas extends Component {
 
         // "lines" that consist of one point need a line to themselves and a closed path to appear
         // otherwise they are not drawn on the canvas
-        if(line.length === 1){
+        if (line.length === 1) {
           context.lineTo(point.x, point.y);
           context.closePath();
         }
@@ -147,6 +147,30 @@ class Canvas extends Component {
 
   };
 
+  /**
+   * push state of currently drawn line to server
+   */
+  updateCurrentLine = () => {
+    const requestBody = {
+      [Constants.POST_LINE_INCOMPLETE_LINE]: this.currentLine
+    };
+
+    fetch(`${Constants.SERVER_ADDRESS}${Constants.POST_LINE}`, {
+      method: "POST",
+      body: JSON.stringify(requestBody),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(response => response.json())
+      .then(json => {
+        console.log(json);
+      })
+      .catch(error => {
+        // TODO
+      });
+  };
+
   startDrawing = () => {
     this.isDrawing = true;
     this.currentLine = [];
@@ -158,8 +182,10 @@ class Canvas extends Component {
       completedLines: completedLines
     });
 
-    //disable fetching while drawing
+    // disable fetching while drawing
     this.stopFetchCycle();
+    // update the server on the currently drawn line
+    this.startUpdateCycle();
 
   };
 
@@ -171,11 +197,14 @@ class Canvas extends Component {
 
     // further mouse movement doesnt draw on canvas
     this.isDrawing = false;
-    
+
+    // stop updating the server on currently drawn line
+    this.stopUpdateCycle();
+
     // send drawn line to server
     this.putCanvasLine(this.currentLine);
     console.log("line sent");
-    
+
     const { completedLines } = this.state;
     completedLines.push(this.currentLine);
     this.setState({
@@ -185,7 +214,7 @@ class Canvas extends Component {
     this.startFetchCycle();
   };
 
-  draw = event => {
+  draw = (event) => {
     if (!this.isDrawing) {
       return;
     }
@@ -219,13 +248,13 @@ class Canvas extends Component {
    */
   getLineCoordinates = (event) => {
     // position of the canvas
-    const { x, y } = this.canvas.getBoundingClientRect();
+    const { x: canvasX, y: canvasY } = this.canvas.getBoundingClientRect();
     // position of the mouse in browser window
-    const { clientX, clientY } = event;
+    const { clientX: mouseX, clientY: mouseY } = event;
 
     const relativeMousePos = {
-      x: clientX - x,
-      y: clientY - y
+      x: mouseX - canvasX,
+      y: mouseY - canvasY
     };
 
     const numberOfPoints = this.currentLine.length;
@@ -240,14 +269,25 @@ class Canvas extends Component {
   };
 
   startFetchCycle = () => {
-    if(!this.canvasFetchInterval){
-      this.canvasFetchInterval = setInterval(this.fetchCanvasState, 1000);
+    if (!this.canvasFetchInterval) {
+      this.canvasFetchInterval = setInterval(this.fetchCanvasState, 50);
     }
   };
 
   stopFetchCycle = () => {
     clearInterval(this.canvasFetchInterval);
     this.canvasFetchInterval = null;
+  };
+
+  startUpdateCycle = () => {
+    if (!this.updateCurrentLineInterval) {
+      this.updateCurrentLineInterval = setInterval(this.updateCurrentLine, 50);
+    }
+  }
+
+  stopUpdateCycle = () => {
+    clearInterval(this.updateCurrentLineInterval);
+    this.updateCurrentLineInterval = null;
   }
 
 }
