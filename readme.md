@@ -3,7 +3,7 @@
 
 A fast-paced real-time multiplayer drawing and deduction game.
 
-## Prereqs
+## Prerequisites
 
 1. node
 2. yarn
@@ -13,15 +13,19 @@ A fast-paced real-time multiplayer drawing and deduction game.
 
 1. `git clone https://gitlabci.exxeta.com/hsreutlingen/ss19-team-2.git`
 
-1. `cd ss19-team-2`
+2. `cd ss19-team-2`
 
-1. `yarn`
+3. `cd fake-artist`
 
-### Start Server
+4. `yarn`
 
-`nodemon server/server.js`
+## Start Server
 
-### Start Client
+In the `fake-artist` directory, do:  
+`nodemon src/backend/server.js`
 
+## Start Client
+
+In the `fake-artist` directory, do:  
 `yarn start`
 
