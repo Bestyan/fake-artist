@@ -13,12 +13,8 @@ export const updateCurrentLine = (currentLine, callback, errorCallback) => {
             }
         })
         .then(response => response.json())
-        .then(json => {
-            callback(json);
-        })
-        .catch(error => {
-            errorCallback(error);
-        });
+        .then(json => callback(json))
+        .catch(error => errorCallback(error));
 };
 
 export const putCanvasLine = (line, callback, errorCallback) => {
@@ -34,12 +30,8 @@ export const putCanvasLine = (line, callback, errorCallback) => {
             }
         })
         .then(response => response.json())
-        .then(json => {
-            callback(json);
-        })
-        .catch(error => {
-            errorCallback(error);
-        });
+        .then(json => callback(json))
+        .catch(error => errorCallback(error));
 
 };
 
@@ -49,10 +41,33 @@ export const fetchCanvasState = (callback, errorCallback) => {
             method: "GET",
         })
         .then(response => response.json())
-        .then(json => {
-            callback(json);
+        .then(json => callback(json))
+        .catch(error => errorCallback(error));
+};
+
+export const chooseName = (name, callback, errorCallback) => {
+    const requestBody = {
+        action: "choose-name",
+        [Constants.PUT_NAME_CHOSEN_NAME]: name
+    }
+
+    fetch(`${Constants.SERVER_ADDRESS}${Constants.PUT_NAME}`, {
+            method: "PUT",
+            body: JSON.stringify(requestBody),
+            headers: {
+                "Content-Type": "application/json"
+            }
         })
-        .catch(error => {
-            errorCallback(error);
-        });
+        .then(response => response.json())
+        .then(json => callback(json))
+        .catch(error => errorCallback(error));
+};
+
+export const pollGameStart = (callback, errorCallback) => {
+    fetch(`${Constants.SERVER_ADDRESS}${Constants.GET_GAME_START}`, {
+            method: "GET"
+        })
+        .then(response => response.json())
+        .then(json => callback(json))
+        .catch(error => errorCallback(error));
 };

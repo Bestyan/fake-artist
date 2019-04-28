@@ -3,6 +3,8 @@
  */
 
 const Constants = require("../Constants");
+
+const Game = require("./Game");
 /**
  * ============================================ SERVER CONFIG ============================================
  */
@@ -26,6 +28,7 @@ server.use(cors(corsOptions));
 
 // contains the completed lines in the same format as incompleteLine (see below)
 const completedLines = [];
+const game = new Game();
 /**
  * line that is currently being drawn
  * format:
@@ -38,6 +41,43 @@ let incompleteLine = {
     color: "#FFFFFF",
     points: []
 };
+
+// PUT PUT_NAME
+server.put(`${Constants.PUT_NAME}`, (request, response) => {
+    const playerName = request.body[Constants.PUT_NAME_CHOSEN_NAME];
+    const player = game.addPlayer(playerName);
+
+    if (game.isStarted || player === null) {
+        console.log(`rejected player '${playerName}' because game has already started`);
+
+        response.json({
+            [Constants.RESPONSE_STATUS]: "fail",
+            [Constants.RESPONSE_MESSAGE]: "game has already started"
+        });
+        return;
+    }
+
+    console.log(`added player: ${JSON.stringify(player)}`);
+
+    const responseData = {
+        [Constants.RESPONSE_STATUS]: "success",
+        [Constants.RESPONSE_MESSAGE]: `player '${player.name}' was added`,
+        [Constants.PUT_NAME_PLAYER_ID]: player.id,
+        [Constants.PUT_NAME_PLAYER_NAME]: player.name,
+        [Constants.PUT_NAME_PLAYER_COLOR]: player.color
+    };
+    response.json(responseData);
+
+    game.tryToStart();
+});
+
+// GET GET_GAME_START
+server.get(`${Constants.GET_GAME_START}`, (request, response) => {
+    response.json({
+        [Constants.GET_GAME_START_PLAYERS]: game.players,
+        [Constants.GET_GAME_START_STATUS]: game.getStartedStatus()
+    });
+});
 
 // GET GET_STATE
 server.get(`${Constants.GET_STATE}`, (request, response) => {
@@ -98,7 +138,7 @@ server.post(`${Constants.POST_LINE}`, (request, response) => {
         [Constants.RESPONSE_MESSAGE]: message
     });
 
-})
+});
 
 server.listen(Constants.SERVER_PORT, (error) => {
     if (error) {

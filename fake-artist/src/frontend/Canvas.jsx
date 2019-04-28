@@ -5,7 +5,7 @@ import * as communication from "./communication";
 
 const LINE_WIDTH = 5;
 const LINE_JOIN = "round";
-const SYNC_INTERVAL_MS = 500;
+const SYNC_INTERVAL_MS = 100;
 
 /**
  * Canvas cannot have a border. Drawing logic depends on that.
