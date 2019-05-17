@@ -22,7 +22,7 @@ A fast-paced real-time multiplayer drawing and deduction game.
 ## Start Server
 
 In the `fake-artist` directory, do:  
-`nodemon src/backend/server.js`
+`yarn start-server`
 
 ## Start Client
 
