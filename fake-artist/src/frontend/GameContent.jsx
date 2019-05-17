@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import Canvas from "./Canvas";
 import * as Constants from "../Constants";
 import Player from "../game/Player";
 import ChooseName from "./ChooseName";
 import AwaitingGameStart from "./AwaitingGameStart";
+import DrawTurns from "./DrawTurns";
 
 class GameContent extends Component {
 
@@ -13,8 +13,7 @@ class GameContent extends Component {
     super(props);
 
     this.state = {
-      phase: Constants.PHASE_CHOOSE_NAME,
-      turn: null
+      phase: Constants.PHASE_CHOOSE_NAME
     }
   }
 
@@ -37,7 +36,7 @@ class GameContent extends Component {
         return this.renderAwaitingGameStart();
 
       case Constants.PHASE_DRAWING_TURNS:
-        return this.renderCanvas();
+        return this.renderDrawTurns();
 
       default:
         return <div>Unknown Phase in GameContent.render()</div>;
@@ -46,30 +45,28 @@ class GameContent extends Component {
 
   renderChooseName = () => {
     return (
-      <div>
-        <ChooseName
-          setPlayer={player => this.player = player}
-          advancePhase={this.advancePhase}
-        />
-      </div>
+      <ChooseName
+        setPlayer={player => this.player = player}
+        advancePhase={this.advancePhase}
+      />
     );
   };
 
   renderAwaitingGameStart = () => {
     return (
-      <div>
-        <AwaitingGameStart
-          advancePhase={this.advancePhase}
-        />
-      </div>
+      <AwaitingGameStart
+        advancePhase={this.advancePhase}
+        setPlayers={players => this.players = players}
+      />
     );
   }
 
-  renderCanvas = () => {
+  renderDrawTurns = () => {
     return (
-      <div>
-        <Canvas color="#0000FF" />
-      </div>
+      <DrawTurns
+        player={this.player}
+        players={this.players}
+      />
     );
   };
 

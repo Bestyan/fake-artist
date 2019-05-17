@@ -38,11 +38,11 @@ const game = new Game();
  * }
  */
 let incompleteLine = {
-    color: "#FFFFFF",
+    color: "#000000",
     points: []
 };
 
-// PUT PUT_NAME
+// PUT_NAME
 server.put(`${Constants.PUT_NAME}`, (request, response) => {
     const playerName = request.body[Constants.PUT_NAME_CHOSEN_NAME];
     const player = game.addPlayer(playerName);
@@ -71,7 +71,7 @@ server.put(`${Constants.PUT_NAME}`, (request, response) => {
     game.tryToStart();
 });
 
-// GET GET_GAME_START
+// GET_GAME_START
 server.get(`${Constants.GET_GAME_START}`, (request, response) => {
     response.json({
         [Constants.GET_GAME_START_PLAYERS]: game.players,
@@ -79,7 +79,14 @@ server.get(`${Constants.GET_GAME_START}`, (request, response) => {
     });
 });
 
-// GET GET_STATE
+// GET_ACTIVE_PLAYER
+server.get(`${Constants.GET_ACTIVE_PLAYER}`, (request, response) => {
+    response.json({
+        [Constants.GET_ACTIVE_PLAYER_ACTIVE_PLAYER]: game.activePlayer
+    })
+})
+
+// GET_STATE
 server.get(`${Constants.GET_STATE}`, (request, response) => {
 
     const lines = completedLines.slice(0);
@@ -95,28 +102,7 @@ server.get(`${Constants.GET_STATE}`, (request, response) => {
     response.json(data);
 });
 
-
-//PUT PUT_LINE
-server.put(`${Constants.PUT_LINE}`, (request, response) => {
-    const data = request.body;
-    completedLines.push(data[Constants.PUT_LINE_FINISHED_LINE]);
-
-    // reset incomplete line
-    // there is no check required, because updates on a new line aren't allowed until the last one has been submitted
-    incompleteLine = {
-        color: "#FFFFFF",
-        points: []
-    };
-
-    console.log(data);
-
-    response.json({
-        [Constants.RESPONSE_STATUS]: "success",
-        [Constants.RESPONSE_MESSAGE]: "line added"
-    });
-});
-
-//POST POST_LINE
+// POST_LINE
 server.post(`${Constants.POST_LINE}`, (request, response) => {
     const data = request.body;
     const updatedLine = data[Constants.POST_LINE_INCOMPLETE_LINE];
@@ -136,6 +122,37 @@ server.post(`${Constants.POST_LINE}`, (request, response) => {
     response.json({
         [Constants.RESPONSE_STATUS]: status,
         [Constants.RESPONSE_MESSAGE]: message
+    });
+
+});
+
+// PUT_LINE
+server.put(`${Constants.PUT_LINE}`, (request, response) => {
+    const data = request.body;
+    if (!game.isValidTurn(data)) {
+        response.json({
+            [Constants.RESPONSE_STATUS]: "fail",
+            [Constants.RESPONSE_MESSAGE]: "It's not your turn",
+            [Constants.PUT_LINE_ACTIVE_PLAYER]: game.activePlayer
+        });
+        return;
+    }
+
+    completedLines.push(data[Constants.PUT_LINE_FINISHED_LINE]);
+
+    // reset incomplete line
+    // there is no check required, because updates on a new line aren't allowed until the last one has been submitted
+    incompleteLine = {
+        color: "#000000",
+        points: []
+    };
+
+    game.changeActivePlayer();
+
+    response.json({
+        [Constants.RESPONSE_STATUS]: "success",
+        [Constants.RESPONSE_MESSAGE]: "line added",
+        [Constants.PUT_LINE_ACTIVE_PLAYER]: game.activePlayer
     });
 
 });

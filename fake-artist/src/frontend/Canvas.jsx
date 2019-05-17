@@ -2,10 +2,11 @@ import React, { PureComponent } from "react";
 import * as Constants from "../Constants.js";
 import PropTypes from "prop-types";
 import * as communication from "./communication";
+import * as GameConfig from "../GameConfig";
 
+// brush settings for drawing on the canvas
 const LINE_WIDTH = 5;
 const LINE_JOIN = "round";
-const SYNC_INTERVAL_MS = 100;
 
 /**
  * Canvas cannot have a border. Drawing logic depends on that.
@@ -21,9 +22,10 @@ class Canvas extends PureComponent {
    * }
    */
   currentLine = {
-    color: this.props.color,
+    color: this.props.player.color,
     points: []
   };
+
   // interval that queries the canvas state from the server
   canvasFetchInterval = null;
   // interval that pushes updates on the currently drawn line to the server
@@ -33,14 +35,7 @@ class Canvas extends PureComponent {
   constructor(props) {
     super(props);
 
-    /**
-     * TODO: remove mouse from state once drawing logic stands.
-     */
     this.state = {
-      mouse: {
-        x: 0,
-        y: 0
-      },
       canvasLines: []
     };
 
@@ -51,9 +46,6 @@ class Canvas extends PureComponent {
     if (this.canvas) {
       this.redrawCanvas();
     }
-
-    // TODO: remove once x|y display is removed
-    const { x, y } = this.state.mouse;
 
     return (
       <div>
@@ -66,15 +58,16 @@ class Canvas extends PureComponent {
           onMouseLeave={this.stopDrawing}
           onMouseMove={this.draw}
           ref={canvas => this.canvas = canvas} />
-        <div>
-          x: {x}<br />
-          y: {y}
-        </div>
       </div>);
   }
 
   componentDidMount() {
     this.startFetchCycle();
+  }
+
+  componentWillUnmount() {
+    this.stopFetchCycle();
+    this.stopUpdateCycle();
   }
 
   redrawCanvas = () => {
@@ -83,6 +76,7 @@ class Canvas extends PureComponent {
     const context = this.canvas.getContext("2d");
     // clear the canvas completely
     context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    // set brush settings
     context.lineJoin = LINE_JOIN;
     context.lineWidth = LINE_WIDTH;
     // draw the current state
@@ -140,8 +134,9 @@ class Canvas extends PureComponent {
    * push new canvas line to server
    */
   putCanvasLine = (line) => {
-    communication.putCanvasLine(
+    communication.finishDrawingTurn(
       line,
+      this.props.player.id,
       json => {
         console.log(json);
       },
@@ -158,6 +153,7 @@ class Canvas extends PureComponent {
   updateCurrentLine = () => {
     communication.updateCurrentLine(
       this.currentLine,
+      this.props.player.id,
       json => {
         console.log(json);
       },
@@ -167,13 +163,18 @@ class Canvas extends PureComponent {
   };
 
   startDrawing = () => {
+    if (!this.props.isMyTurn()) {
+      console.log("It's not your turn");
+      return;
+    }
+
     // disable fetching while drawing
     this.stopFetchCycle();
 
     this.isDrawing = true;
     // reset currentLine reference
     this.currentLine = {
-      color: this.props.color,
+      color: this.props.player.color,
       points: []
     };
 
@@ -199,9 +200,12 @@ class Canvas extends PureComponent {
     // stop updating the server on currently drawn line
     this.stopUpdateCycle();
 
+    // resets active player, otherwise the player is able to draw "phantom lines", that only he can see
+    this.props.finishTurn();
+
     // send drawn line to server
     this.putCanvasLine(this.currentLine);
-    console.log("line sent");
+    console.log("line sent - finishing turn");
 
     this.startFetchCycle();
   };
@@ -220,7 +224,7 @@ class Canvas extends PureComponent {
     // prepare drawing
     const context = this.canvas.getContext("2d");
     // set pen properties
-    context.strokeStyle = "#FF0000";
+    context.strokeStyle = this.props.player.color;
     context.lineJoin = LINE_JOIN;
     context.lineWidth = LINE_WIDTH;
 
@@ -230,11 +234,6 @@ class Canvas extends PureComponent {
     context.lineTo(endPoint.x, endPoint.y);
     context.closePath();
     context.stroke();
-
-    // TODO: remove when coordinate display is removed
-    this.setState({
-      mouse: endPoint
-    });
   };
 
   /**
@@ -262,23 +261,27 @@ class Canvas extends PureComponent {
     return { startPoint, endPoint };
   };
 
+  // start fetching what other people are drawing
   startFetchCycle = () => {
     if (!this.canvasFetchInterval) {
-      this.canvasFetchInterval = setInterval(this.fetchCanvasState, SYNC_INTERVAL_MS);
+      this.canvasFetchInterval = setInterval(this.fetchCanvasState, GameConfig.CANVAS_UPDATE_INTERVAL_MS);
     }
   };
 
+  // stop fetching what other people are drawing
   stopFetchCycle = () => {
     clearInterval(this.canvasFetchInterval);
     this.canvasFetchInterval = null;
   };
 
+  // start posting your drawing to the server
   startUpdateCycle = () => {
     if (!this.updateCurrentLineInterval) {
-      this.updateCurrentLineInterval = setInterval(this.updateCurrentLine, SYNC_INTERVAL_MS);
+      this.updateCurrentLineInterval = setInterval(this.updateCurrentLine, GameConfig.CANVAS_UPDATE_INTERVAL_MS);
     }
   }
 
+  // stop posting your drawing to the server
   stopUpdateCycle = () => {
     clearInterval(this.updateCurrentLineInterval);
     this.updateCurrentLineInterval = null;
@@ -287,7 +290,11 @@ class Canvas extends PureComponent {
 }
 
 Canvas.propTypes = {
-  color: PropTypes.string.isRequired
+  player: PropTypes.object.isRequired,
+  isMyTurn: PropTypes.func.isRequired,
+  startPolling: PropTypes.func.isRequired,
+  stopPolling: PropTypes.func.isRequired,
+  finishTurn: PropTypes.func.isRequired
 }
 
 export default Canvas;

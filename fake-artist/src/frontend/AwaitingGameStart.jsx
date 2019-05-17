@@ -1,10 +1,10 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import * as communication from "./communication";
 import PropTypes from "prop-types";
 import * as Constants from "../Constants";
 import * as GameConfig from "../GameConfig";
 
-class AwaitingGameStart extends Component{
+class AwaitingGameStart extends PureComponent{
 
     pollingInterval = null;
 
@@ -53,6 +53,7 @@ class AwaitingGameStart extends Component{
 
                 if(status === "start"){
                     this.stopPolling();
+                    this.props.setPlayers(players);
                     this.props.advancePhase();
                 }
             },
@@ -64,7 +65,7 @@ class AwaitingGameStart extends Component{
 
     startPolling = () => {
         if(this.pollingInterval === null){
-            this.pollingInterval = setInterval(this.pollGameStart, GameConfig.POLLING_INTERVAL_MS);
+            this.pollingInterval = setInterval(this.pollGameStart, GameConfig.GAME_START_POLLING_INTERVAL_MS);
         }
     };
 

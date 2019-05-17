@@ -2,7 +2,7 @@
 
 ## Player chooses names
 
-1.  request (PUT `PUT_NAME`)  
+1.  request (`PUT_NAME`)  
 
         {
             action: "choose-name",
@@ -21,7 +21,7 @@
 
 ## When does the game start (polling)
 
-1.  request (GET `GET_GAME_START`)
+1.  request (`GET_GAME_START`)
         
 2.  response
 
@@ -37,18 +37,20 @@
 
 ## Whose turn is it
 
-1.  request (GET)
+1.  request (`GET_ACTIVE_PLAYER`)
 
 2.  response
 
         {
-            turn-id: ${id},
-            turn-name: ${name}
+            active-player: {
+                id: ${id},
+                name: ${name}
+            }
         }
 
 ## Live Draw
 
-1.  request (POST)
+1.  request (`POST_LINE`)
 
         {
             action: "live-draw",
@@ -68,7 +70,7 @@
 
 ## Finishing a draw turn
 
-1.  request (PUT)
+1.  request (`PUT_LINE`)
 
         {
             action: "finish-turn",
@@ -84,6 +86,8 @@
         {
             status: "success"|"fail",
             message: "...",
-            turn-id: ${id},
-            turn-name: ${name}
+            active-player: {
+                id: ${id},
+                name: ${name}
+            }
         }
