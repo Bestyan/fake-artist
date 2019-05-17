@@ -27,9 +27,9 @@
 - canvas data is updated on all clients in realtime
 - first version of in-game page has a canvas everyone can draw on
 - drawing on it sends POST updates to backend
-- canvas is refreshed periodically 
+- canvas is refreshed periodically
 
-### v0.2 Players taking turns drawing
+### v0.2 Players taking turns drawing **(done)**
 
 - every player chooses a nickname
 - a list of nicknames is displayed
