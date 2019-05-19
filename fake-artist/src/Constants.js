@@ -84,6 +84,12 @@ module.exports = {
     PUT_TERM: "/declare-term",
     PUT_TERM_TERM: "term",
 
+    // POST request to fetch topic and term (artists)
+    POST_TOPIC_AND_TERM: "/get-topic-and-term",
+    POST_TOPIC_AND_TERM_PLAYER_ID: "player-id",
+    POST_TOPIC_AND_TERM_TOPIC: "topic",
+    POST_TOPIC_AND_TERM_TERM: "term",
+
     // GET request to get active player
     GET_ACTIVE_PLAYER: "/whose-turn-is-it",
     GET_ACTIVE_PLAYER_ACTIVE_PLAYER: "active-player",

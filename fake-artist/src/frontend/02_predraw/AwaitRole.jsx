@@ -73,7 +73,7 @@ class AwaitRole extends Component {
           error: error
         });
 
-        setTimeout(this.fetchRole, GameConfig.AWAIT_ROLE_FETCH_INTERVAL_MS);
+        setTimeout(this.fetchRole, GameConfig.RETRY_TIMEOUT_MS);
       }
     );
   }

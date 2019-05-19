@@ -28,7 +28,7 @@ class DrawTurns extends PureComponent {
       <div>
         <div>Currently drawing: {playerName}</div>
         <div>Players:
-                    <ul>{players}</ul>
+          <ul>{players}</ul>
         </div>
         <Canvas
           player={this.props.player}
@@ -79,7 +79,7 @@ class DrawTurns extends PureComponent {
 
   startPollingActivePlayer = () => {
     if (this.pollingActivePlayerInterval === null) {
-      this.pollingActivePlayerInterval = setInterval(this.pollActivePlayer, GameConfig.ACTIVE_PLAYER_POLLING_INTERVAL_MS);
+      this.pollingActivePlayerInterval = setInterval(this.pollActivePlayer, GameConfig.POLLING_INTERVAL_MS);
     }
   };
 

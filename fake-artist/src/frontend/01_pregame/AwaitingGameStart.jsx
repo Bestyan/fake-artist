@@ -65,7 +65,7 @@ class AwaitingGameStart extends PureComponent {
 
   startPolling = () => {
     if (this.pollingInterval === null) {
-      this.pollingInterval = setInterval(this.pollGameStart, GameConfig.GAME_START_POLLING_INTERVAL_MS);
+      this.pollingInterval = setInterval(this.pollGameStart, GameConfig.POLLING_INTERVAL_MS);
     }
   };
 

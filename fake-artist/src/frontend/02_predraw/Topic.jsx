@@ -46,6 +46,7 @@ class Topic extends Component {
         if(json[Constants.RESPONSE_STATUS] === "fail"){
           console.log(json[Constants.RESPONSE_MESSAGE]);
           // TODO display error
+          return;
         }
 
         this.props.setTopic(topic);
@@ -53,7 +54,7 @@ class Topic extends Component {
       error => {
         console.log(error);
         // retry
-        setTimeout(this.declareTopic, GameConfig.DECLARE_TOPIC_OR_TERM_TIMEOUT_MS);
+        setTimeout(this.declareTopic, GameConfig.RETRY_TIMEOUT_MS);
       }
     );
 

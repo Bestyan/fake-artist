@@ -131,6 +131,25 @@ server.put(`${Constants.PUT_TERM}`, (request, response) => {
     });
 });
 
+server.post(`${Constants.POST_TOPIC_AND_TERM}`, (request, response) => {
+    const playerId = request.body[Constants.POST_TOPIC_AND_TERM_PLAYER_ID];
+
+    if(!game.isValidPlayer(playerId)){
+        response.json({
+            [Constants.RESPONSE_STATUS]: "fail",
+            [Constants.RESPONSE_MESSAGE]: `player with id ${playerId} does not exist`
+        });
+        return;
+    }
+
+    response.json({
+        [Constants.RESPONSE_STATUS]: "success",
+        [Constants.RESPONSE_MESSAGE]: `the topic is '${game.topic}', the term is ${game.term}`,
+        [Constants.POST_TOPIC_AND_TERM_TOPIC]: game.topic,
+        [Constants.POST_TOPIC_AND_TERM_TERM]: game.term
+    });
+})
+
 // GET_ACTIVE_PLAYER
 server.get(`${Constants.GET_ACTIVE_PLAYER}`, (request, response) => {
     response.json({

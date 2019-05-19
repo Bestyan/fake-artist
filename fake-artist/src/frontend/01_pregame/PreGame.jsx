@@ -39,7 +39,7 @@ class PreGame extends PureComponent {
     return (
       <AwaitingGameStart
         advanceSubphase={this.advanceSubphase}
-        setPlayers={players => this.players = players}
+        setPlayers={this.props.setPlayers}
       />
     );
   };

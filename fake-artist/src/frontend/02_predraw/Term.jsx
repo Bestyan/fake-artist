@@ -44,10 +44,11 @@ class Term extends Component {
         if (json[Constants.RESPONSE_STATUS] === "fail") {
           console.log(json[Constants.RESPONSE_MESSAGE]);
           // TODO display error
+          return;
         }
 
         this.props.setTerm(term);
-        // setTimeout(this.props.advanceSubphase, GameConfig.DISPLAY_TERM_TIME_MS);
+        setTimeout(this.props.advanceSubphase, GameConfig.DISPLAY_TERM_TIME_MS);
       },
       error => {
         console.log(error);

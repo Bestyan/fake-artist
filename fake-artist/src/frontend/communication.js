@@ -48,7 +48,7 @@ export const fetchRole = (playerId, callback, errorCallback) => {
         .catch(error => errorCallback(error));
 };
 
-// declare topic
+// declare topic (question master)
 export const declareTopic = (topic, callback, errorCallback) => {
     const requestBody = {
         action: "declare-topic",
@@ -67,7 +67,7 @@ export const declareTopic = (topic, callback, errorCallback) => {
         .catch(error => errorCallback(error));
 }
 
-// declare term
+// declare term (question master)
 export const declareTerm = (term, callback, errorCallback) => {
     const requestBody = {
         action: "declare-term",
@@ -76,6 +76,25 @@ export const declareTerm = (term, callback, errorCallback) => {
 
     fetch(`${Constants.SERVER_ADDRESS}${Constants.PUT_TERM}`, {
             method: "PUT",
+            body: JSON.stringify(requestBody),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(json => callback(json))
+        .catch(error => errorCallback(error));
+}
+
+// fetch topic and term (artists)
+export const pollTopicAndTerm = (playerId, callback, errorCallback) => {
+    const requestBody = {
+        action: "get-topic-and-term",
+        [Constants.POST_TOPIC_AND_TERM_PLAYER_ID]: playerId
+    }
+
+    fetch(`${Constants.SERVER_ADDRESS}${Constants.POST_TOPIC_AND_TERM}`, {
+            method: "POST",
             body: JSON.stringify(requestBody),
             headers: {
                 "Content-Type": "application/json"
