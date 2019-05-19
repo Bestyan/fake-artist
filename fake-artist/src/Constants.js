@@ -49,12 +49,15 @@ const PUT_LINE_ACTIVE_PLAYER = "active-player";
 // before being able to draw, every player has to choose a name
 const PHASE_CHOOSE_NAME = "choose-name";
 // after choosing a name, waiting for enough players to launch the game
-const PHASE_GAME_START = "awaiting-game-start"
+const PHASE_GAME_START = "awaiting-game-start";
+// question master chooses a topic and a term
+const PHASE_PRE_DRAW = "question-master-declares-topic-and-term";
 // players take turns drawing exactly one line each
 const PHASE_DRAWING_TURNS = "drawing-turns";
 const PHASE_ORDER = [
     PHASE_CHOOSE_NAME,
     PHASE_GAME_START,
+    PHASE_PRE_DRAW,
     PHASE_DRAWING_TURNS
 ]
 

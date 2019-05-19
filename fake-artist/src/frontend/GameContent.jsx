@@ -4,10 +4,14 @@ import Player from "../game/Player";
 import ChooseName from "./01_pregame/ChooseName";
 import AwaitingGameStart from "./01_pregame/AwaitingGameStart";
 import DrawTurns from "./03_draw/DrawTurns";
+import PreDraw from "./02_predraw/PreDraw";
 
 class GameContent extends Component {
 
   player = new Player();
+  players = null;
+  topic = null;
+  term = null;
 
   constructor(props) {
     super(props);
@@ -35,6 +39,9 @@ class GameContent extends Component {
       case Constants.PHASE_GAME_START:
         return this.renderAwaitingGameStart();
 
+      case Constants.PHASE_PRE_DRAW:
+        return this.renderPreDraw();
+
       case Constants.PHASE_DRAWING_TURNS:
         return this.renderDrawTurns();
 
@@ -57,6 +64,17 @@ class GameContent extends Component {
       <AwaitingGameStart
         advancePhase={this.advancePhase}
         setPlayers={players => this.players = players}
+      />
+    );
+  }
+
+  renderPreDraw = () => {
+    return (
+      <PreDraw
+        advancePhase={this.advancePhase}
+        player={this.player}
+        setTopic={topic => this.topic = topic}
+        setTerm={term => this.term = term}
       />
     );
   }

@@ -4,6 +4,7 @@ function Player(name, id, color) {
     this.name = name;
     this.id = id;
     this.color = color;
+    this.role = null;
 };
 
 Player.nextId = 1;
