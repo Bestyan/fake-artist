@@ -42,7 +42,7 @@
 - one player is chosen as question master
 - question master chooses a theme
 - theme is displayed to everyone
-- question masteer chooses a term around the theme
+- question master chooses a term around the theme
 - term is displayed to everyone
 - drawing starts
 
