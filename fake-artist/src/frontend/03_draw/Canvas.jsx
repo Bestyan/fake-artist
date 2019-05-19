@@ -1,8 +1,8 @@
 import React, { PureComponent } from "react";
-import * as Constants from "../Constants.js";
+import * as Constants from "../../Constants.js";
 import PropTypes from "prop-types";
-import * as communication from "./communication";
-import * as GameConfig from "../GameConfig";
+import * as communication from "../communication";
+import * as GameConfig from "../../game/GameConfig";
 
 // brush settings for drawing on the canvas
 const LINE_WIDTH = 5;

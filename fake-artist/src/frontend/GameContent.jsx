@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import * as Constants from "../Constants";
 import Player from "../game/Player";
-import ChooseName from "./ChooseName";
-import AwaitingGameStart from "./AwaitingGameStart";
-import DrawTurns from "./DrawTurns";
+import ChooseName from "./01_pregame/ChooseName";
+import AwaitingGameStart from "./01_pregame/AwaitingGameStart";
+import DrawTurns from "./03_draw/DrawTurns";
 
 class GameContent extends Component {
 
