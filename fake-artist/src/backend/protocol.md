@@ -53,6 +53,57 @@
             player-role: ${role}
         }
 
+## Question Master declares topic
+
+1. request (`PUT_TOPIC`)
+
+        {
+            action: "declare-topic", // for debugging purposes only
+            topic: "..."
+        }
+
+2. response
+
+        {
+            status: "success" | "fail",
+            message: "..."
+        }
+
+## Question Master declares term
+
+1. request (`PUT_TERM`)
+
+        {
+            action: "declare-term", // for debugging purposes only
+            term: "..."
+        }
+
+2. response
+
+        {
+            status: "success" | "fail",
+            message: "..."
+        }
+
+## Artists fetch Topic and Term
+
+This must be a POST request because the fake will only receive the topic
+
+1. request (`POST_TOPIC_AND_TERM`)
+
+        {
+            action: "get-topic-and-term", // for debugging purposes only
+            player-id: ${id}
+        }
+
+2. response
+
+        {
+            status: "success" | "fail",
+            message: "...",
+            topic: ${topic},
+            term: ${term}
+        }
 
 ## Whose turn is it
 

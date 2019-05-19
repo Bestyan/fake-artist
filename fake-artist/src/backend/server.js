@@ -82,9 +82,6 @@ server.get(`${Constants.GET_GAME_START}`, (request, response) => {
 
 // POST_ROLE
 server.post(`${Constants.POST_ROLE}`, (request, response) => {
-    console.log(`${Constants.POST_ROLE}`);
-    console.log(JSON.stringify(request.body));
-    console.log(util.inspect(request));
     const playerId = request.body[Constants.POST_ROLE_PLAYER_ID];
     const isValid = game.isValidPlayer(playerId);
 
@@ -103,6 +100,34 @@ server.post(`${Constants.POST_ROLE}`, (request, response) => {
         [Constants.RESPONSE_MESSAGE]: `player-id ${player.id} has role ${player.role}`,
         [Constants.POST_ROLE_PLAYER_ID]: player.id,
         [Constants.POST_ROLE_PLAYER_ROLE]: player.role
+    });
+});
+
+// PUT_TOPIC
+server.put(`${Constants.PUT_TOPIC}`, (request, response) => {
+    const topic = request.body[Constants.PUT_TOPIC_TOPIC];
+
+    // TODO check if submitting player is question master
+
+    game.topic = topic;
+
+    response.json({
+        [Constants.RESPONSE_STATUS]: "success",
+        [Constants.RESPONSE_MESSAGE]: `the topic is '${topic}'`,
+    });
+});
+
+// PUT_TERM
+server.put(`${Constants.PUT_TERM}`, (request, response) => {
+    const term = request.body[Constants.PUT_TERM_TERM];
+
+    // TODO check if submitting player is question master
+
+    game.term = term;
+
+    response.json({
+        [Constants.RESPONSE_STATUS]: "success",
+        [Constants.RESPONSE_MESSAGE]: `the term is '${term}'`,
     });
 });
 

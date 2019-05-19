@@ -10,10 +10,16 @@ const Constants = require("../Constants");
  */
 function Game() {
     this.activePlayer = null;
+
     this.players = [];
+    this.turnOrder = [];
+
     this.isStarted = false;
     this.availableColors = GameConfig.PLAYER_COLORS.slice(0); // clone color array
-    this.turnOrder = [];
+    shuffle(this.availableColors);
+
+    this.topic = null;
+    this.term = null;
 }
 
 Game.prototype.addPlayer = function (playerName) {

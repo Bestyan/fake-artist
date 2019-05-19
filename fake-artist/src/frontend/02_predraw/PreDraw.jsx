@@ -20,11 +20,8 @@ class PreDraw extends Component {
       case Constants.PHASE_PRE_DRAW_AWAIT_ROLE:
         return this.renderAwaitRole();
 
-      case Constants.PHASE_PRE_DRAW_DECLARE_TOPIC:
-        return this.renderDeclareTopic();
-
-      case Constants.PHASE_PRE_DRAW_DECLARE_TERM:
-        return this.renderDeclareTerm();
+      case Constants.PHASE_PRE_DRAW_DECLARE_TOPIC_AND_TERM:
+        return this.renderDeclareTopicAndTerm();
         
       default:
         return <div>Unknown subphase in PreDraw.render(): {this.state.subphase}</div>;
@@ -40,13 +37,15 @@ class PreDraw extends Component {
     );
   }
 
-  renderDeclareTopic = () => {
+  renderDeclareTopicAndTerm = () => {
     switch (this.props.player.role) {
       case "artist":
         return (
           <AwaitTopic
-            theme={this.state.theme}
+            setTopic={this.props.setTopic}
+            setTerm={this.props.setTerm}
             player={this.props.player}
+            advanceSubphase={this.advanceSubphase}
           />
         );
       case "question-master":
@@ -55,6 +54,8 @@ class PreDraw extends Component {
             topic={this.state.topic}
             setTopic={this.props.setTopic}
             setTerm={this.props.setTerm}
+            player={this.props.player}
+            advanceSubphase={this.advanceSubphase}
           />
         );
       default:

@@ -39,13 +39,11 @@ const PHASE_ORDER_PRE_GAME = [
 // wait for role assignment from server
 const PHASE_PRE_DRAW_AWAIT_ROLE = "await-role";
 // question master declares a topic and term
-const PHASE_PRE_DRAW_DECLARE_TOPIC = "question-master-declares-topic";
-const PHASE_PRE_DRAW_DECLARE_TERM = "question-master-declares-term";
+const PHASE_PRE_DRAW_DECLARE_TOPIC_AND_TERM = "question-master-declares-topic-and-term";
 
 const PHASE_ORDER_PRE_DRAW = [
     PHASE_PRE_DRAW_AWAIT_ROLE,
-    PHASE_PRE_DRAW_DECLARE_TOPIC,
-    PHASE_PRE_DRAW_DECLARE_TERM
+    PHASE_PRE_DRAW_DECLARE_TOPIC_AND_TERM
 ];
 
 // es5 exports because node does not support es6 exports yet and I dont want to introduce babel just for this
@@ -73,10 +71,18 @@ module.exports = {
     GET_GAME_START_PLAYERS: "players",
     GET_GAME_START_STATUS: "game-status",
 
-    // POST requeust to get the assigned role
+    // POST request to get the assigned role
     POST_ROLE: "/fetch-player-role",
     POST_ROLE_PLAYER_ID: "player-id",
     POST_ROLE_PLAYER_ROLE: "player-role",
+
+    // PUT request to declare topic (question master only!)
+    PUT_TOPIC: "/declare-topic",
+    PUT_TOPIC_TOPIC: "topic",
+
+    // PUT request to declare term (question master only!)
+    PUT_TERM: "/declare-term",
+    PUT_TERM_TERM: "term",
 
     // GET request to get active player
     GET_ACTIVE_PLAYER: "/whose-turn-is-it",
@@ -112,8 +118,7 @@ module.exports = {
 
     // === Sub Phase PRE_DRAW ===
     PHASE_PRE_DRAW_AWAIT_ROLE: PHASE_PRE_DRAW_AWAIT_ROLE,
-    PHASE_PRE_DRAW_DECLARE_TOPIC: PHASE_PRE_DRAW_DECLARE_TOPIC,
-    PHASE_PRE_DRAW_DECLARE_TERM: PHASE_PRE_DRAW_DECLARE_TERM,
+    PHASE_PRE_DRAW_DECLARE_TOPIC_AND_TERM: PHASE_PRE_DRAW_DECLARE_TOPIC_AND_TERM,
 
     PHASE_ORDER_PRE_DRAW: PHASE_ORDER_PRE_DRAW
 

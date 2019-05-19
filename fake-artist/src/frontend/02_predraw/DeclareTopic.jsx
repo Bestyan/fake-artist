@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Term from "./Term";
 import Topic from "./Topic";
 
-class DeclareTheme extends Component {
+class DeclareTopic extends Component {
 
   constructor(props) {
     super(props);
@@ -17,15 +17,20 @@ class DeclareTheme extends Component {
   render() {
     let term = "";
     if (this.state.topic !== null) {
-      term = <Term
-        setTerm={term => this.setTerm}
-      />;
+      term = (
+        <Term
+          topic={this.state.topic}
+          term={this.state.term}
+          setTerm={this.setTerm}
+          advanceSubphase={this.props.advanceSubphase}
+        />
+      );
     }
 
     return (
       <div>
         <Topic
-          topic={this.props.topic}
+          topic={this.state.topic}
           setTopic={this.setTopic}
         />
         {term}
@@ -49,9 +54,12 @@ class DeclareTheme extends Component {
 
 }
 
-DeclareTheme.propTypes = {
-  topic: PropTypes.string.isRequired,
-  setTopic: PropTypes.func.isRequired
+DeclareTopic.propTypes = {
+  topic: PropTypes.string,
+  setTopic: PropTypes.func.isRequired,
+  setTerm: PropTypes.func.isRequired,
+  player: PropTypes.object.isRequired,
+  advanceSubphase: PropTypes.func.isRequired
 };
 
-export default DeclareTheme;
+export default DeclareTopic;

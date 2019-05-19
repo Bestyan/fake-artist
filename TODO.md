@@ -100,6 +100,7 @@
 - time limit on turns
 - time limit on choosing a theme and a term
 - introduce identification token
+- display error messages / connection status
 
 ### v2.0 *"It's actually pretty"*
 

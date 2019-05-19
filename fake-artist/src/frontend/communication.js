@@ -48,6 +48,44 @@ export const fetchRole = (playerId, callback, errorCallback) => {
         .catch(error => errorCallback(error));
 };
 
+// declare topic
+export const declareTopic = (topic, callback, errorCallback) => {
+    const requestBody = {
+        action: "declare-topic",
+        [Constants.PUT_TOPIC_TOPIC]: topic
+    };
+
+    fetch(`${Constants.SERVER_ADDRESS}${Constants.PUT_TOPIC}`, {
+            method: "PUT",
+            body: JSON.stringify(requestBody),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(json => callback(json))
+        .catch(error => errorCallback(error));
+}
+
+// declare term
+export const declareTerm = (term, callback, errorCallback) => {
+    const requestBody = {
+        action: "declare-term",
+        [Constants.PUT_TERM_TERM]: term
+    };
+
+    fetch(`${Constants.SERVER_ADDRESS}${Constants.PUT_TERM}`, {
+            method: "PUT",
+            body: JSON.stringify(requestBody),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(json => callback(json))
+        .catch(error => errorCallback(error));
+}
+
 // polling whose turn it is
 export const pollActivePlayer = (callback, errorCallback) => {
     fetch(`${Constants.SERVER_ADDRESS}${Constants.GET_ACTIVE_PLAYER}`, {
