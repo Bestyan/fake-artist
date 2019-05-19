@@ -3,6 +3,12 @@ module.exports = {
     // polling interval while waiting for game to start
     GAME_START_POLLING_INTERVAL_MS: 1000,
 
+    // timeout after a failed role fetch before repeating the request
+    AWAIT_ROLE_FETCH_INTERVAL_MS: 500,
+
+    // amount of time the "Your role is ..." screen stays before advancing phase
+    DISPLAY_ROLE_TIME_MS: 2000,
+
     // polling interval to fetch active player
     ACTIVE_PLAYER_POLLING_INTERVAL_MS: 1000,
 

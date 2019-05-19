@@ -3,8 +3,9 @@
  */
 
 const Constants = require("../Constants");
-
 const Game = require("./Game");
+
+const util = require('util');
 /**
  * ============================================ SERVER CONFIG ============================================
  */
@@ -79,6 +80,32 @@ server.get(`${Constants.GET_GAME_START}`, (request, response) => {
     });
 });
 
+// POST_ROLE
+server.post(`${Constants.POST_ROLE}`, (request, response) => {
+    console.log(`${Constants.POST_ROLE}`);
+    console.log(JSON.stringify(request.body));
+    console.log(util.inspect(request));
+    const playerId = request.body[Constants.POST_ROLE_PLAYER_ID];
+    const isValid = game.isValidPlayer(playerId);
+
+    if(!isValid){
+        response.json({
+            [Constants.RESPONSE_STATUS]: "fail",
+            [Constants.RESPONSE_MESSAGE]: `player with id ${playerId} does not exist`
+        });
+        return;
+    }
+
+    const player = game.getPlayerById(playerId);
+
+    response.json({
+        [Constants.RESPONSE_STATUS]: "success",
+        [Constants.RESPONSE_MESSAGE]: `player-id ${player.id} has role ${player.role}`,
+        [Constants.POST_ROLE_PLAYER_ID]: player.id,
+        [Constants.POST_ROLE_PLAYER_ROLE]: player.role
+    });
+});
+
 // GET_ACTIVE_PLAYER
 server.get(`${Constants.GET_ACTIVE_PLAYER}`, (request, response) => {
     response.json({
@@ -110,7 +137,7 @@ server.post(`${Constants.POST_LINE}`, (request, response) => {
     let status = null;
     let message = null;
     // check whether previous line has been submitted as finished or its color matches
-    if (incompleteLine.points.length === 0 || incompleteLine.color == updatedLine.color) {
+    if (incompleteLine.points.length === 0 || incompleteLine.color === updatedLine.color) {
         incompleteLine = updatedLine;
         status = "success";
         message = "line updated";

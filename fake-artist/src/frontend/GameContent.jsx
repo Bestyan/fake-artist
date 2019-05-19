@@ -42,7 +42,7 @@ class GameContent extends Component {
         return this.renderDrawTurns();
 
       default:
-        return <div>Unknown Phase in GameContent.render()</div>;
+        return <div>Unknown Phase in GameContent.render(): {this.state.phase}</div>;
     }
   }
 

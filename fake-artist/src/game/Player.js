@@ -9,6 +9,10 @@ function Player(name, id, color) {
 
 Player.nextId = 1;
 
+Player.prototype.setRole = function (role) {
+    this.role = role;
+}
+
 Player.getNextId = function () {
     return Player.nextId++;
 };

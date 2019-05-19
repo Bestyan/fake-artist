@@ -60,20 +60,31 @@ const PHASE_ORDER = [
 ]
 
 // === Sub Game Phases ===
-// every phase may have "sub-phases" within
 
 // before being able to draw, every player has to choose a name
 const PHASE_PRE_GAME_CHOOSE_NAME = "choose-name";
 // after choosing a name, waiting for enough players to launch the game
 const PHASE_PRE_GAME_AWAIT_GAME_START = "awaiting-game-start";
+// subphase order PRE_GAME
 const PHASE_ORDER_PRE_GAME = [
     PHASE_PRE_GAME_CHOOSE_NAME,
     PHASE_PRE_GAME_AWAIT_GAME_START
-]
+];
 
+// wait for role assignment from server
+const PHASE_PRE_DRAW_AWAIT_ROLE = "await-role";
+// question master declares a topic and term
+const PHASE_PRE_DRAW_DECLARE_TOPIC = "question-master-declares-topic";
+const PHASE_PRE_DRAW_DECLARE_TERM = "question-master-declares-term";
+
+const PHASE_ORDER_PRE_DRAW = [
+    PHASE_PRE_DRAW_AWAIT_ROLE,
+    PHASE_PRE_DRAW_DECLARE_TOPIC,
+    PHASE_PRE_DRAW_DECLARE_TERM
+];
 
 // es5 exports because node does not support es6 exports yet and I dont want to introduce babel just for this
-// TODO refactor this to put all the info directly here in the dictionary
+// TODO refactor this to put all the info directly in here
 module.exports = {
 
     SERVER_URL: SERVER_URL,
@@ -95,6 +106,10 @@ module.exports = {
     GET_GAME_START: GET_GAME_START,
     GET_GAME_START_PLAYERS: GET_GAME_START_PLAYERS,
     GET_GAME_START_STATUS: GET_GAME_START_STATUS,
+
+    POST_ROLE: "/fetch-player-role",
+    POST_ROLE_PLAYER_ID: "player-id",
+    POST_ROLE_PLAYER_ROLE: "player-role",
 
     GET_ACTIVE_PLAYER: GET_ACTIVE_PLAYER,
     GET_ACTIVE_PLAYER_ACTIVE_PLAYER: GET_ACTIVE_PLAYER_ACTIVE_PLAYER,
@@ -118,10 +133,18 @@ module.exports = {
 
     PHASE_ORDER: PHASE_ORDER,
 
-    // === Sub Game PRE_GAME ===
+    // === Sub Phase PRE_GAME ===
     PHASE_PRE_GAME_CHOOSE_NAME: PHASE_PRE_GAME_CHOOSE_NAME,
     PHASE_PRE_GAME_AWAIT_GAME_START: PHASE_PRE_GAME_AWAIT_GAME_START,
 
-    PHASE_ORDER_PRE_GAME: PHASE_ORDER_PRE_GAME
+    PHASE_ORDER_PRE_GAME: PHASE_ORDER_PRE_GAME,
+
+    // === Sub Phase PRE_DRAW ===
+    PHASE_PRE_DRAW_AWAIT_ROLE: PHASE_PRE_DRAW_AWAIT_ROLE,
+    PHASE_PRE_DRAW_DECLARE_TOPIC: PHASE_PRE_DRAW_DECLARE_TOPIC,
+    PHASE_PRE_DRAW_DECLARE_TERM: PHASE_PRE_DRAW_DECLARE_TERM,
+
+    PHASE_ORDER_PRE_DRAW: PHASE_ORDER_PRE_DRAW
+
 
 };

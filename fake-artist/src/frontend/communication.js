@@ -5,7 +5,7 @@ export const chooseName = (name, callback, errorCallback) => {
     const requestBody = {
         action: "choose-name",
         [Constants.PUT_NAME_CHOSEN_NAME]: name
-    }
+    };
 
     fetch(`${Constants.SERVER_ADDRESS}${Constants.PUT_NAME}`, {
             method: "PUT",
@@ -29,6 +29,25 @@ export const pollGameStart = (callback, errorCallback) => {
         .catch(error => errorCallback(error));
 };
 
+// fetch role assignment
+export const fetchRole = (playerId, callback, errorCallback) => {
+    const requestBody = {
+        action: "get-role",
+        [Constants.POST_ROLE_PLAYER_ID]: playerId
+    };
+
+    fetch(`${Constants.SERVER_ADDRESS}${Constants.POST_ROLE}`, {
+            method: "POST",
+            body: JSON.stringify(requestBody),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(json => callback(json))
+        .catch(error => errorCallback(error));
+};
+
 // polling whose turn it is
 export const pollActivePlayer = (callback, errorCallback) => {
     fetch(`${Constants.SERVER_ADDRESS}${Constants.GET_ACTIVE_PLAYER}`, {
@@ -37,7 +56,7 @@ export const pollActivePlayer = (callback, errorCallback) => {
         .then(response => response.json())
         .then(json => callback(json))
         .catch(error => errorCallback(error));
-}
+};
 
 // live-draw: others see what I'm drawing in (almost) real time
 export const updateCurrentLine = (currentLine, playerId, callback, errorCallback) => {

@@ -22,7 +22,7 @@ class PreGame extends PureComponent {
         return this.renderAwaitingGameStart();
 
       default:
-        return <div>Unknown subphase in PreGame.render()</div>;
+        return <div>Unknown subphase in PreGame.render(): {this.state.subphase}</div>;
     }
   }
 

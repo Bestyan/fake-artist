@@ -46,25 +46,42 @@ Game.prototype.getStartedStatus = function () {
  * if so, start the game
  */
 Game.prototype.tryToStart = function () {
+    if (this.isStarted) {
+        return;
+    }
+
     if (this.players.length >= GameConfig.AUTOLAUNCH_AT_X_PLAYERS) {
 
         console.log("launching game");
 
         this.isStarted = true;
+        this.assignRoles();
         this.determineTurnOrder();
         this.changeActivePlayer();
     }
 };
 
-Game.prototype.determineTurnOrder = function(){
+Game.prototype.assignRoles = function () {
+    roles = ["question-master"];
+    for (let i = 1; i < this.players.length; i++) {
+        roles.push("artist");
+    }
+
+    shuffle(roles);
+    for (let i = 0; i < this.players.length; i++) {
+        this.players[i].role = roles[i];
+    }
+}
+
+Game.prototype.determineTurnOrder = function () {
     this.turnOrder = this.players.slice(0);
     shuffle(this.turnOrder);
 
-    console.log("Turn order: " + this.turnOrder.toString());
+    console.log("Turn order: " + JSON.stringify(this.turnOrder));
 };
 
-Game.prototype.changeActivePlayer = function(){
-    if(!this.activePlayer){
+Game.prototype.changeActivePlayer = function () {
+    if (!this.activePlayer) {
         this.activePlayer = this.turnOrder[0];
         return;
     }
@@ -76,12 +93,31 @@ Game.prototype.changeActivePlayer = function(){
     console.log(`active player is now ${this.activePlayer.name}`);
 };
 
-Game.prototype.isValidTurn = function(putLineData){
+/**
+ * checks whether player id and player color match
+ */
+Game.prototype.isValidTurn = function (putLineData) {
     playerId = putLineData[Constants.PUT_LINE_PLAYER_ID];
     lineColor = putLineData[Constants.PUT_LINE_FINISHED_LINE].color;
 
     return playerId === this.activePlayer.id && lineColor === this.activePlayer.color;
 };
+
+/**
+ * checks whether playerId exists
+ */
+Game.prototype.isValidPlayer = function (playerId) {
+    return this.getPlayerById(playerId) !== null;
+}
+
+Game.prototype.getPlayerById = function (id) {
+    for (let i = 0; i < this.players.length; i++) {
+        if (this.players[i].id === id) {
+            return this.players[i];
+        }
+    }
+    return null;
+}
 
 module.exports = Game;
 

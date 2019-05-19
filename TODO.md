@@ -99,7 +99,7 @@
 
 - time limit on turns
 - time limit on choosing a theme and a term
-- ...
+- introduce identification token
 
 ### v2.0 *"It's actually pretty"*
 

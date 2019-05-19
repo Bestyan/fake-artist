@@ -18,7 +18,7 @@ class DeclareTheme extends Component {
     let term = "";
     if (this.state.topic !== null) {
       term = <Term
-        setTerm={term => this.setState({ term: term })}
+        setTerm={term => this.setTerm}
       />;
     }
 
@@ -37,6 +37,13 @@ class DeclareTheme extends Component {
     this.props.setTopic(topic);
     this.setState({
       topic: topic
+    });
+  }
+
+  setTerm = term => {
+    this.props.setTerm(term);
+    this.setState({
+      term: term
     });
   }
 
