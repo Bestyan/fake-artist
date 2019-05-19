@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import * as Constants from "../Constants";
 import Player from "../game/Player";
-import ChooseName from "./01_pregame/ChooseName";
-import AwaitingGameStart from "./01_pregame/AwaitingGameStart";
-import DrawTurns from "./03_draw/DrawTurns";
+import PreGame from "./01_pregame/PreGame";
+import DrawTurns from "./03_drawing_turns/DrawTurns";
 import PreDraw from "./02_predraw/PreDraw";
 
 class GameContent extends Component {
@@ -17,7 +16,7 @@ class GameContent extends Component {
     super(props);
 
     this.state = {
-      phase: Constants.PHASE_CHOOSE_NAME
+      phase: Constants.PHASE_PRE_GAME
     }
   }
 
@@ -33,11 +32,8 @@ class GameContent extends Component {
 
   render() {
     switch (this.state.phase) {
-      case Constants.PHASE_CHOOSE_NAME:
-        return this.renderChooseName();
-
-      case Constants.PHASE_GAME_START:
-        return this.renderAwaitingGameStart();
+      case Constants.PHASE_PRE_GAME:
+        return this.renderPreGame();
 
       case Constants.PHASE_PRE_DRAW:
         return this.renderPreDraw();
@@ -50,19 +46,11 @@ class GameContent extends Component {
     }
   }
 
-  renderChooseName = () => {
+  renderPreGame = () => {
     return (
-      <ChooseName
+      <PreGame
+        advancePhase={this.advancePhase}
         setPlayer={player => this.player = player}
-        advancePhase={this.advancePhase}
-      />
-    );
-  };
-
-  renderAwaitingGameStart = () => {
-    return (
-      <AwaitingGameStart
-        advancePhase={this.advancePhase}
         setPlayers={players => this.players = players}
       />
     );

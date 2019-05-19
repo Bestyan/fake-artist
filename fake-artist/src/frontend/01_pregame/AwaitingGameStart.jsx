@@ -54,7 +54,7 @@ class AwaitingGameStart extends PureComponent {
         if (status === "start") {
           this.stopPolling();
           this.props.setPlayers(players);
-          this.props.advancePhase();
+          this.props.advanceSubphase();
         }
       },
       error => {
@@ -76,7 +76,7 @@ class AwaitingGameStart extends PureComponent {
 }
 
 AwaitingGameStart.propTypes = {
-  advancePhase: PropTypes.func.isRequired
+  advanceSubphase: PropTypes.func.isRequired
 }
 
 export default AwaitingGameStart;

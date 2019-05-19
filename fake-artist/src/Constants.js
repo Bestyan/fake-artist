@@ -46,19 +46,29 @@ const PUT_LINE_ACTIVE_PLAYER = "active-player";
 // ============================================================
 // Game Logic Constants
 
-// before being able to draw, every player has to choose a name
-const PHASE_CHOOSE_NAME = "choose-name";
-// after choosing a name, waiting for enough players to launch the game
-const PHASE_GAME_START = "awaiting-game-start";
+// === Main Game Phases ===
+// player chooses a name and waits for enough players to join
+const PHASE_PRE_GAME = "choose-name-and-wait-for-players";
 // question master chooses a topic and a term
 const PHASE_PRE_DRAW = "question-master-declares-topic-and-term";
 // players take turns drawing exactly one line each
 const PHASE_DRAWING_TURNS = "drawing-turns";
 const PHASE_ORDER = [
-    PHASE_CHOOSE_NAME,
-    PHASE_GAME_START,
+    PHASE_PRE_GAME,
     PHASE_PRE_DRAW,
     PHASE_DRAWING_TURNS
+]
+
+// === Sub Game Phases ===
+// every phase may have "sub-phases" within
+
+// before being able to draw, every player has to choose a name
+const PHASE_PRE_GAME_CHOOSE_NAME = "choose-name";
+// after choosing a name, waiting for enough players to launch the game
+const PHASE_PRE_GAME_AWAIT_GAME_START = "awaiting-game-start";
+const PHASE_ORDER_PRE_GAME = [
+    PHASE_PRE_GAME_CHOOSE_NAME,
+    PHASE_PRE_GAME_AWAIT_GAME_START
 ]
 
 
@@ -101,10 +111,17 @@ module.exports = {
     GET_STATE: GET_STATE,
     GET_STATE_LINES: GET_STATE_LINES,
 
-
-    PHASE_CHOOSE_NAME: PHASE_CHOOSE_NAME,
-    PHASE_GAME_START: PHASE_GAME_START,
+    // === Main Game Phases ===
+    PHASE_PRE_GAME: PHASE_PRE_GAME,
+    PHASE_PRE_DRAW: PHASE_PRE_DRAW,
     PHASE_DRAWING_TURNS: PHASE_DRAWING_TURNS,
 
-    PHASE_ORDER: PHASE_ORDER
+    PHASE_ORDER: PHASE_ORDER,
+
+    // === Sub Game PRE_GAME ===
+    PHASE_PRE_GAME_CHOOSE_NAME: PHASE_PRE_GAME_CHOOSE_NAME,
+    PHASE_PRE_GAME_AWAIT_GAME_START: PHASE_PRE_GAME_AWAIT_GAME_START,
+
+    PHASE_ORDER_PRE_GAME: PHASE_ORDER_PRE_GAME
+
 };

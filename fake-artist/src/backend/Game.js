@@ -1,7 +1,7 @@
 // es5 because node doesn't support es6 exports/imports
 // mixing es6 and module.exports breaks everything, so es5 it is
 
-const GameConfig = require("../GameConfig");
+const GameConfig = require("../game/GameConfig");
 const Player = require("../game/Player");
 const Constants = require("../Constants");
 

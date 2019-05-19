@@ -34,7 +34,7 @@ class ChooseName extends Component {
           player.name = json[Constants.PUT_NAME_PLAYER_NAME];
           player.color = json[Constants.PUT_NAME_PLAYER_COLOR];
           this.props.setPlayer(player);
-          this.props.advancePhase();
+          this.props.advanceSubphase();
         }
 
         if (json.status === "fail") {
@@ -50,7 +50,7 @@ class ChooseName extends Component {
 
 ChooseName.propTypes = {
   setPlayer: PropTypes.func.isRequired,
-  advancePhase: PropTypes.func.isRequired
+  advanceSubphase: PropTypes.func.isRequired
 }
 
 export default ChooseName;
