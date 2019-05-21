@@ -37,7 +37,7 @@
 - only one player can draw at a time
 - finishing a line ends the player's turn
 
-### v0.3 Pre-draw Phase
+### v0.3 Pre-draw Phase **(done)**
 
 - one player is chosen as question master
 - question master chooses a theme
