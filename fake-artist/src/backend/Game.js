@@ -68,9 +68,9 @@ Game.prototype.tryToStart = function () {
 };
 
 Game.prototype.assignRoles = function () {
-    roles = ["question-master"];
-    for (let i = 1; i < this.players.length; i++) {
-        roles.push("artist");
+    roles = [Constants.GAME_ROLE_QUESTION_MASTER, Constants.GAME_ROLE_FAKE];
+    for (let i = 2; i < this.players.length; i++) {
+        roles.push(Constants.GAME_ROLE_ARTIST);
     }
 
     shuffle(roles);
@@ -123,6 +123,21 @@ Game.prototype.getPlayerById = function (id) {
         }
     }
     return null;
+}
+
+Game.prototype.getTermForPlayer = function(id){
+    const player = this.getPlayerById(id);
+
+    if(player === null){
+        return null;
+    }
+
+    if(player.role === Constants.GAME_ROLE_FAKE){
+        if(this.term !== null){
+            return "X";
+        }
+    }
+    return this.term;
 }
 
 module.exports = Game;

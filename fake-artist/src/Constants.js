@@ -57,6 +57,16 @@ module.exports = {
     CLIENT_PORT: CLIENT_PORT,
     CLIENT_ADDRESS: `${CLIENT_URL}:${CLIENT_PORT}`,
 
+    // ============================================================
+    // Game terms
+
+    GAME_ROLE_QUESTION_MASTER: "question-master",
+    GAME_ROLE_FAKE: "fake",
+    GAME_ROLE_ARTIST: "artist",
+
+    // ============================================================
+    // Protocol (see /src/backend/protocol.md)
+
     RESPONSE_STATUS: "status",
     RESPONSE_MESSAGE: "message",
 
@@ -108,6 +118,9 @@ module.exports = {
     // GET request to get current canvas/game state
     GET_STATE: "/fetch-canvas-state",
     GET_STATE_LINES: "lines",
+
+    // ============================================================
+    // Game Logic Constants
 
     // === Main Game Phases ===
     PHASE_PRE_GAME: PHASE_PRE_GAME,

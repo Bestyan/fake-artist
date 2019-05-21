@@ -142,11 +142,13 @@ server.post(`${Constants.POST_TOPIC_AND_TERM}`, (request, response) => {
         return;
     }
 
+    const term = game.getTermForPlayer(playerId);
+
     response.json({
         [Constants.RESPONSE_STATUS]: "success",
-        [Constants.RESPONSE_MESSAGE]: `the topic is '${game.topic}', the term is ${game.term}`,
+        [Constants.RESPONSE_MESSAGE]: `the topic is '${game.topic}', the term is ${term}`,
         [Constants.POST_TOPIC_AND_TERM_TOPIC]: game.topic,
-        [Constants.POST_TOPIC_AND_TERM_TERM]: game.term
+        [Constants.POST_TOPIC_AND_TERM_TERM]: term
     });
 })
 

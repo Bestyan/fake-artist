@@ -40,6 +40,7 @@ class PreDraw extends Component {
   renderDeclareTopicAndTerm = () => {
     switch (this.props.player.role) {
       case "artist":
+      case "fake":
         return (
           <AwaitTopic
             setTopic={this.props.setTopic}

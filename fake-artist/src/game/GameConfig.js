@@ -17,7 +17,7 @@ module.exports = {
     CANVAS_UPDATE_INTERVAL_MS: 1000,
 
     // number of players at which the game is launched
-    AUTOLAUNCH_AT_X_PLAYERS: 2,
+    AUTOLAUNCH_AT_X_PLAYERS: 3,
 
     // available player colors
     PLAYER_COLORS: [
