@@ -46,7 +46,7 @@
 - term is displayed to everyone
 - drawing starts
 
-### v0.4 The Fake appears
+### v0.4 The Fake appears **(done)**
 
 - in the pre-draw Phase, one player is chosen as the fake
 - the fake receives an X instead of the term
