@@ -139,6 +139,7 @@ class Canvas extends PureComponent {
       this.props.player.id,
       json => {
         console.log(json);
+        this.currentLine.points = [];
       },
       error => {
         console.log(error);
