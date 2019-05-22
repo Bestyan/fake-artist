@@ -3,18 +3,39 @@ import * as communication from "../communication";
 import PropTypes from "prop-types";
 import * as Constants from "../../Constants";
 import Player from "../../game/Player";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
 
 class ChooseName extends Component {
 
   nameInput = null;
 
   render() {
-    return (
+    return (  
       <form onSubmit={event => this.submitName(event)}>
-        <h1>Choose a name</h1>
-        <input type="text" ref={input => this.nameInput = input} />
-        <button type="submit">go</button>
+        <div>
+          <AppBar position="static">
+            <Toolbar >
+              <Typography variant="title" color="inherit">
+                Fake Artist
+              </Typography>
+              <Button color="inherit" align="center">Rules</Button>
+              <Button color="inherit" align="center">Tutorial</Button>
+            </Toolbar>
+           </AppBar>
+        </div>
+        <div>
+          <Grid align="center">
+        <h2>Choose a name</h2>
+        <input type="text" placeholder="Your Name" style={{padding:9}} ref={input => this.nameInput = input} />
+        <Button variant="contained" color="inherited" type="submit">go</Button>
+          </Grid>
+        </div>
       </form>
+      
     );
   }
 
