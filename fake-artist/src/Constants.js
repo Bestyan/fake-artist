@@ -17,11 +17,14 @@ const PHASE_PRE_GAME = "choose-name-and-wait-for-players";
 const PHASE_PRE_DRAW = "question-master-declares-topic-and-term";
 // players take turns drawing exactly one line each
 const PHASE_DRAWING_TURNS = "drawing-turns";
+// players vote on who's the fake
+const PHASE_VOTING = "voting";
 
 const PHASE_ORDER = [
     PHASE_PRE_GAME,
     PHASE_PRE_DRAW,
-    PHASE_DRAWING_TURNS
+    PHASE_DRAWING_TURNS,
+    PHASE_VOTING
 ]
 
 // === Sub Game Phases ===
@@ -45,6 +48,20 @@ const PHASE_ORDER_PRE_DRAW = [
     PHASE_PRE_DRAW_AWAIT_ROLE,
     PHASE_PRE_DRAW_DECLARE_TOPIC_AND_TERM
 ];
+
+// player hasnt voted yet
+const PHASE_VOTING_CAST_VOTE = "cast-vote";
+// not everyone has voted
+const PHASE_VOTING_VOTE_IN_PROGRESS = "vote-in-progress";
+// everyone voted
+const PHASE_VOTING_VOTE_FINISHED = "vote-finished";
+
+const PHASE_ORDER_VOTING = [
+    PHASE_VOTING_CAST_VOTE,
+    PHASE_VOTING_VOTE_IN_PROGRESS,
+    PHASE_VOTING_VOTE_FINISHED
+];
+
 
 // es5 exports because node does not support es6 exports yet and I dont want to introduce babel just for this
 module.exports = {
@@ -126,6 +143,7 @@ module.exports = {
     PHASE_PRE_GAME: PHASE_PRE_GAME,
     PHASE_PRE_DRAW: PHASE_PRE_DRAW,
     PHASE_DRAWING_TURNS: PHASE_DRAWING_TURNS,
+    PHASE_VOTING: PHASE_VOTING,
 
     PHASE_ORDER: PHASE_ORDER,
 
@@ -139,7 +157,14 @@ module.exports = {
     PHASE_PRE_DRAW_AWAIT_ROLE: PHASE_PRE_DRAW_AWAIT_ROLE,
     PHASE_PRE_DRAW_DECLARE_TOPIC_AND_TERM: PHASE_PRE_DRAW_DECLARE_TOPIC_AND_TERM,
 
-    PHASE_ORDER_PRE_DRAW: PHASE_ORDER_PRE_DRAW
+    PHASE_ORDER_PRE_DRAW: PHASE_ORDER_PRE_DRAW,
+
+    // === Sub Phase VOTING ===
+    PHASE_VOTING_CAST_VOTE: PHASE_VOTING_CAST_VOTE,
+    PHASE_VOTING_VOTE_IN_PROGRESS: PHASE_VOTING_VOTE_IN_PROGRESS,
+    PHASE_VOTING_VOTE_FINISHED: PHASE_VOTING_VOTE_FINISHED,
+
+    PHASE_ORDER_VOTING: PHASE_ORDER_VOTING
 
 
 };

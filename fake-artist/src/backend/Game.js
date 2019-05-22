@@ -20,6 +20,14 @@ function Game() {
 
     this.topic = null;
     this.term = null;
+
+    this.votes = {};
+
+    this.currentDrawingRound = 1;
+    // game is in voting phase
+    this.isVoting = false;
+    // voting has finished
+    this.isDisplayingVoteResults = false;
 }
 
 Game.prototype.addPlayer = function (playerName) {
@@ -93,7 +101,13 @@ Game.prototype.changeActivePlayer = function () {
     }
 
     const activeIndex = this.turnOrder.indexOf(this.activePlayer);
-    const nextIndex = (activeIndex + 1) % this.turnOrder.length;
+    const nextIndex = (activeIndex + 1);
+    if(nextIndex >= this.turnOrder.length){
+        nextIndex %= this.turnOrder.length;
+        this.currentDrawingRound++;
+
+        this.tryToStartVotingPhase();
+    }
     this.activePlayer = this.turnOrder[nextIndex];
 
     console.log(`active player is now ${this.activePlayer.name}`);
@@ -138,6 +152,20 @@ Game.prototype.getTermForPlayer = function(id){
         }
     }
     return this.term;
+}
+
+Game.prototype.tryToStartVotingPhase = function(){
+    if(this.currentDrawingRound <= GameConfig.NUMBER_OF_DRAWING_ROUNDS){
+        return;
+    }
+
+    // no active players anymore
+    this.activePlayer = null;
+    for(let i = 0; i < players.length; i++){
+        this.votes[players[i]] = 0;
+    }
+
+    this.isVoting = true;
 }
 
 module.exports = Game;

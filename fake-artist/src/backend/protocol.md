@@ -118,6 +118,13 @@ This must be a POST request because the fake will only receive the topic
             }
         }
 
+    or
+
+        {
+            status: "fail",
+            message: "Voting phase has started"
+        }
+
 ## Live Draw
 
 1.  request (`POST_LINE`)
@@ -160,4 +167,55 @@ This must be a POST request because the fake will only receive the topic
                 id: ${id},
                 name: ${name}
             }
+        }
+
+## Cast a vote
+
+1. request (`PUT_VOTE`)
+
+        {
+            action: "cast-vote",
+            voting-player: ${playerId},
+            vote: ${voteId}
+        }
+
+2. response
+
+        {
+            status: "success" | "fail",
+            message: "..."
+        }
+
+## Get Results
+
+1. request (`GET_VOTES`)
+
+2. response
+
+        {
+            result: [
+                {
+                    player-id: ${id},
+                    votes: ${numberOfVotes}
+                },
+                {...}
+            ],
+            finished: true | false
+        }
+
+## Get Vote Evaluation
+
+1. request (`POST_VOTE_EVALUATION`)
+
+        {
+            action: "vote-evaluation",
+            player-id: ${id}
+        }
+
+2. response
+
+        {
+            status: "success" | "fail",
+            message: "...",
+            evaluation-result: "artist-win" | "wait-for-fake" | "detected" | ... TODO
         }

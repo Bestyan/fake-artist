@@ -66,6 +66,13 @@ class DrawTurns extends PureComponent {
   pollActivePlayer = () => {
     communication.pollActivePlayer(
       json => {
+        if(json[Constants.RESPONSE_STATUS] === "fail"){
+          //only ever fails if voting phase has started
+          this.stopPollingActivePlayer();
+          this.props.advancePhase();
+          return;
+        }
+
         const activePlayer = json[Constants.GET_ACTIVE_PLAYER_ACTIVE_PLAYER];
         this.setState({
           activePlayer: activePlayer
@@ -92,7 +99,8 @@ class DrawTurns extends PureComponent {
 
 DrawTurns.propTypes = {
   player: PropTypes.object.isRequired,
-  players: PropTypes.array.isRequired
+  players: PropTypes.array.isRequired,
+  advancePhase: PropTypes.func.isRequired
 };
 
 export default DrawTurns;

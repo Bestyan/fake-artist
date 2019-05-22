@@ -19,6 +19,9 @@ module.exports = {
     // number of players at which the game is launched
     AUTOLAUNCH_AT_X_PLAYERS: 3,
 
+    // after how many rounds does the voting phase take place
+    NUMBER_OF_DRAWING_ROUNDS: 2,
+
     // available player colors
     PLAYER_COLORS: [
         "#c10bea", //purple

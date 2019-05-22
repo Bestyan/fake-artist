@@ -4,6 +4,7 @@ import Player from "../game/Player";
 import PreGame from "./01_pregame/PreGame";
 import DrawTurns from "./03_drawing_turns/DrawTurns";
 import PreDraw from "./02_predraw/PreDraw";
+import Voting from "./04_voting/Voting";
 
 class GameContent extends Component {
 
@@ -41,6 +42,9 @@ class GameContent extends Component {
       case Constants.PHASE_DRAWING_TURNS:
         return this.renderDrawTurns();
 
+      case Constants.PHASE_VOTING:
+        return this.renderVoting();
+
       default:
         return <div>Unknown Phase in GameContent.render(): {this.state.phase}</div>;
     }
@@ -72,9 +76,20 @@ class GameContent extends Component {
       <DrawTurns
         player={this.player}
         players={this.players}
+        advancePhase={this.advancePhase}
       />
     );
   };
+
+  renderVoting = () => {
+    return (
+      <Voting
+        advancePhase={this.advancePhase}
+        player={this.player}
+        players={this.players}
+      />
+    );
+  }
 
 }
 

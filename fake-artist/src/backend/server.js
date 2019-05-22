@@ -131,6 +131,8 @@ server.put(`${Constants.PUT_TERM}`, (request, response) => {
     });
 });
 
+
+// POST_TOPIC_AND_TERM
 server.post(`${Constants.POST_TOPIC_AND_TERM}`, (request, response) => {
     const playerId = request.body[Constants.POST_TOPIC_AND_TERM_PLAYER_ID];
 
@@ -154,9 +156,16 @@ server.post(`${Constants.POST_TOPIC_AND_TERM}`, (request, response) => {
 
 // GET_ACTIVE_PLAYER
 server.get(`${Constants.GET_ACTIVE_PLAYER}`, (request, response) => {
+    if(game.isVoting){
+        response.json({
+            [Constants.RESPONSE_STATUS]: "fail",
+            [Constants.RESPONSE_MESSAGE]: "Voting phase has started"
+        })
+    }
+
     response.json({
         [Constants.GET_ACTIVE_PLAYER_ACTIVE_PLAYER]: game.activePlayer
-    })
+    });
 })
 
 // GET_STATE
