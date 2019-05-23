@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import * as Constants from "../Constants";
+import * as Constants from "../../Constants";
 import CastVote from "./CastVote";
 import VoteInProgress from "./VoteInProgress";
 import VoteFinished from "./VoteFinished";

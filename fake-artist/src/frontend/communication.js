@@ -165,3 +165,25 @@ export const fetchCanvasState = (callback, errorCallback) => {
         .then(json => callback(json))
         .catch(error => errorCallback(error));
 };
+
+// cast a vote for a player to be the fake
+export const castVote = (voteFor, votedBy, callback, errorCallback) => {
+    const requestBody = {
+        action: "cast-vote",
+        [Constants.PUT_VOTE_VOTING_PLAYER]: votedBy,
+        [Constants.PUT_VOTE_VOTE]: voteFor
+    };
+
+    fetch(`${Constants.SERVER_ADDRESS}${Constants.PUT_VOTE}`, {
+            method: "PUT",
+            body: JSON.stringify(requestBody),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(json => callback(json))
+        .catch(error => errorCallback(error));
+};
+
+

@@ -21,7 +21,10 @@ function Game() {
     this.topic = null;
     this.term = null;
 
-    this.votes = {};
+    this.votes = {
+        voteCounts: {},
+        voted: []
+    };
 
     this.currentDrawingRound = 1;
     // game is in voting phase
@@ -101,8 +104,8 @@ Game.prototype.changeActivePlayer = function () {
     }
 
     const activeIndex = this.turnOrder.indexOf(this.activePlayer);
-    const nextIndex = (activeIndex + 1);
-    if(nextIndex >= this.turnOrder.length){
+    let nextIndex = (activeIndex + 1);
+    if (nextIndex >= this.turnOrder.length) {
         nextIndex %= this.turnOrder.length;
         this.currentDrawingRound++;
 
@@ -128,7 +131,7 @@ Game.prototype.isValidTurn = function (putLineData) {
  */
 Game.prototype.isValidPlayer = function (playerId) {
     return this.getPlayerById(playerId) !== null;
-}
+};
 
 Game.prototype.getPlayerById = function (id) {
     for (let i = 0; i < this.players.length; i++) {
@@ -137,36 +140,58 @@ Game.prototype.getPlayerById = function (id) {
         }
     }
     return null;
-}
+};
 
-Game.prototype.getTermForPlayer = function(id){
+Game.prototype.getTermForPlayer = function (id) {
     const player = this.getPlayerById(id);
 
-    if(player === null){
+    if (player === null) {
         return null;
     }
 
-    if(player.role === Constants.GAME_ROLE_FAKE){
-        if(this.term !== null){
+    if (player.role === Constants.GAME_ROLE_FAKE) {
+        if (this.term !== null) {
             return "X";
         }
     }
     return this.term;
-}
+};
 
-Game.prototype.tryToStartVotingPhase = function(){
-    if(this.currentDrawingRound <= GameConfig.NUMBER_OF_DRAWING_ROUNDS){
+Game.prototype.tryToStartVotingPhase = function () {
+    if (this.currentDrawingRound <= GameConfig.NUMBER_OF_DRAWING_ROUNDS) {
         return;
     }
 
+    console.log("voting phase started");
+
     // no active players anymore
     this.activePlayer = null;
-    for(let i = 0; i < players.length; i++){
-        this.votes[players[i]] = 0;
+
+    // init vote counts
+    for (let i = 0; i < this.players.length; i++) {
+        this.votes.voteCounts[this.players[i]] = 0;
     }
 
+    console.log("vote counts initialized");
     this.isVoting = true;
-}
+};
+
+/**
+ * @returns {boolean} whether vote was successful
+ */
+Game.prototype.voteFor = function(voteForId, votedById){
+    const votingPlayer = this.getPlayerById(votedById);
+    const votedFor = this.getPlayerById(voteForId);
+    if(this.votes.voted.includes(votingPlayer) || !votedFor){
+        return false;
+    }
+
+    // mark player as voted
+    this.votes.voted.push(votingPlayer);
+    // increase vote count
+    this.votes.voteCounts[votedFor]++;
+    return true;
+};
 
 module.exports = Game;
 

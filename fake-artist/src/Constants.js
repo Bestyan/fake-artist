@@ -136,6 +136,23 @@ module.exports = {
     GET_STATE: "/fetch-canvas-state",
     GET_STATE_LINES: "lines",
 
+    // PUT request to vote for a player to be the fake
+    PUT_VOTE: "/cast-vote",
+    PUT_VOTE_VOTING_PLAYER: "voting-player",
+    PUT_VOTE_VOTE: "vote",
+
+    // GET request to get current vote counts
+    GET_VOTES: "/get-vote-counts",
+    GET_VOTES_RESULT: "result",
+    GET_VOTES_RESULT_PLAYER_ID: "player-id",
+    GET_VOTES_RESULT_VOTES: "votes",
+    GET_VOTES_FINISHED: "finished",
+
+    // POST request to get evaluation of the vote
+    POST_VOTE_EVALUATION: "/get-vote-evaluation",
+    POST_VOTE_EVALUATION_PLAYER_ID: "player-id",
+    POST_VOTE_EVALUATION_RESULT: "evaluation-result",
+
     // ============================================================
     // Game Logic Constants
 

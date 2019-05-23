@@ -160,7 +160,8 @@ server.get(`${Constants.GET_ACTIVE_PLAYER}`, (request, response) => {
         response.json({
             [Constants.RESPONSE_STATUS]: "fail",
             [Constants.RESPONSE_MESSAGE]: "Voting phase has started"
-        })
+        });
+        return;
     }
 
     response.json({
@@ -237,6 +238,26 @@ server.put(`${Constants.PUT_LINE}`, (request, response) => {
         [Constants.PUT_LINE_ACTIVE_PLAYER]: game.activePlayer
     });
 
+});
+
+// PUT_VOTE
+server.put(`${Constants.PUT_VOTE}`, (request, response) => {
+    const data = request.body;
+    const voteForId = data[Constants.PUT_VOTE_VOTE];
+    const votingPlayerId = data[Constants.PUT_VOTE_VOTING_PLAYER];
+    const success = game.voteFor(voteForId, votingPlayerId);
+    if(!success){
+        response.json({
+            [Constants.RESPONSE_STATUS]: "fail",
+            [Constants.RESPONSE_MESSAGE]: "vote was rejected. you have already voted or the player you voted for does not exist",
+        });
+        return;
+    }
+
+    response.json({
+        [Constants.RESPONSE_STATUS]: "success",
+        [Constants.RESPONSE_MESSAGE]: `you voted for ${game.getPlayerById(voteForId).name}`,
+    });
 });
 
 server.listen(Constants.SERVER_PORT, (error) => {

@@ -20,7 +20,7 @@ module.exports = {
     AUTOLAUNCH_AT_X_PLAYERS: 3,
 
     // after how many rounds does the voting phase take place
-    NUMBER_OF_DRAWING_ROUNDS: 2,
+    NUMBER_OF_DRAWING_ROUNDS: 1,
 
     // available player colors
     PLAYER_COLORS: [
