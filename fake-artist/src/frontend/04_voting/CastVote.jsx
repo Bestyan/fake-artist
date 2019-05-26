@@ -18,6 +18,7 @@ class CastVote extends Component {
         <Candidate
           candidate={player}
           vote={() => this.vote(player.id)}
+          key={player.id}
         />
       )
     });

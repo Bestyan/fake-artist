@@ -1,8 +1,7 @@
 import React, { PureComponent } from "react";
 import * as Constants from "../../Constants";
 import CastVote from "./CastVote";
-import VoteInProgress from "./VoteInProgress";
-import VoteFinished from "./VoteFinished";
+import VoteDone from "./VoteDone";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
@@ -26,12 +25,8 @@ class Voting extends PureComponent {
         subphaseRender = this.renderCastVote();
         break;
 
-      case Constants.PHASE_VOTING_VOTE_IN_PROGRESS:
-        subphaseRender = this.renderVoteInProgress();
-        break;
-
-      case Constants.PHASE_VOTING_VOTE_FINISHED:
-        subphaseRender = this.renderVoteFinished();
+      case Constants.PHASE_VOTING_VOTE_DONE:
+        subphaseRender = this.renderVoteDone();
         break;
 
       default:
@@ -56,17 +51,9 @@ class Voting extends PureComponent {
     );
   };
 
-  renderVoteInProgress = () => {
+  renderVoteDone = () => {
     return (
-      <VoteInProgress
-        advanceSubphase={this.advanceSubphase}
-      />
-    )
-  };
-
-  renderVoteFinished = () => {
-    return (
-      <VoteFinished
+      <VoteDone
         advanceSubphase={this.advanceSubphase}
       />
     )

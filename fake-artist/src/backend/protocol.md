@@ -195,7 +195,11 @@ This must be a POST request because the fake will only receive the topic
         {
             result: [
                 {
-                    player-id: ${id},
+                    player: {
+                        id: ${id},
+                        name: ${name},
+                        color: ${color}
+                    },
                     votes: ${numberOfVotes}
                 },
                 {...}

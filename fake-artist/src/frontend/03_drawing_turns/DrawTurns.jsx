@@ -1,9 +1,6 @@
 import React, { PureComponent } from "react";
-import * as communication from "../communication";
 import PropTypes from "prop-types";
-import * as Constants from "../../Constants";
 import Canvas from "./Canvas";
-import * as GameConfig from "../../game/GameConfig";
 
 class DrawTurns extends PureComponent {
 
@@ -49,6 +46,7 @@ class DrawTurns extends PureComponent {
   };
 
   finishTurn = () => {
+    // disables drawing
     this.setState({
       activePlayer: null
     });

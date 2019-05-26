@@ -198,3 +198,12 @@ export const castVote = (voteFor, votedBy, callback, errorCallback) => {
         .then(json => callback(json))
         .catch(error => errorCallback(error));
 };
+
+export const fetchVotes = (callback, errorCallback) => {
+    fetch(`${Constants.SERVER_ADDRESS}${Constants.GET_VOTES}`, {
+            method: "GET"
+        })
+        .then(response => response.json())
+        .then(json => callback(json))
+        .catch(error => errorCallback(error));
+}

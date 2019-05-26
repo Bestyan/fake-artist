@@ -263,7 +263,13 @@ server.put(`${Constants.PUT_VOTE}`, (request, response) => {
 // GET_VOTES
 
 server.get(`${Constants.GET_VOTES}`, (request, response) => {
-    const result = [];
+    const result = game.voteState.result;
+    const finished = game.voteState.isFinished;
+    
+    response.json({
+        [Constants.GET_VOTES_RESULT]: result,
+        [Constants.GET_VOTES_FINISHED]: finished
+    });
 })
 
 server.listen(Constants.SERVER_PORT, (error) => {

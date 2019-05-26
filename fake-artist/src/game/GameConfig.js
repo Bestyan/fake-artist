@@ -12,6 +12,9 @@ module.exports = {
     // amount of time the "The term is ..." screen stays
     DISPLAY_TERM_TIME_MS: 2000,
 
+    // amount of time vote results are displayed after everyone has voted
+    DISPLAY_VOTE_RESULTS_TIME_MS: 2000,
+
     // polling interval to fetch the current state of the canvas
     // smaller number -> higher load, but smoother drawing. never go below 50
     CANVAS_UPDATE_INTERVAL_MS: 1000,

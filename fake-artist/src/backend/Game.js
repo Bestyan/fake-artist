@@ -21,8 +21,17 @@ function Game() {
     this.topic = null;
     this.term = null;
 
+    /*
+    result = [
+        {
+            player: {id, name, color}
+            votes: 0
+        }, 
+        {...}
+    ]
+     */
     this.voteState = {
-        voteCounts: [],
+        result: [],
         voted: [],
         isFinished: false
     };
@@ -170,9 +179,9 @@ Game.prototype.tryToStartVotingPhase = function () {
 
     // init vote counts
     for (let i = 0; i < this.players.length; i++) {
-        this.voteState.voteCounts.push({
-            [Constants.GET_VOTES_RESULT_PLAYER_ID]: this.players[i].id,
-            [Constants.GET_VOTES_RESULT_VOTES]: 0
+        this.voteState.result.push({
+            player: this.players[i],
+            votes: 0
         });
     }
 
@@ -206,11 +215,10 @@ Game.prototype.voteFor = function(voteForId, votedById){
     this.voteState.voted.push(votingPlayer);
     
     // increase vote count
-    const voteCounts = this.voteState.voteCounts;
+    const voteCounts = this.voteState.result;
     for(let i = 0; i < voteCounts.length; i++){
-        const playerVoteState = voteCounts[i];
-        if(playerVoteState[Constants.GET_VOTES_RESULT_PLAYER_ID] === voteForId){
-            playerVoteState[Constants.GET_VOTES_RESULT_VOTES]++;
+        if(voteCounts[i].player.id === voteForId){
+            voteCounts[i].votes++;
             break;
         }
     }
@@ -219,7 +227,7 @@ Game.prototype.voteFor = function(voteForId, votedById){
 
     // if everyone voted, vote is finished
     if(this.voteState.voted.length === this.players.length){
-        this.voteState.finished = true;
+        this.voteState.isFinished = true;
         console.log("voting has finished");
     }
 

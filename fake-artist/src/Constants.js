@@ -51,15 +51,12 @@ const PHASE_ORDER_PRE_DRAW = [
 
 // player hasnt voted yet
 const PHASE_VOTING_CAST_VOTE = "cast-vote";
-// not everyone has voted
-const PHASE_VOTING_VOTE_IN_PROGRESS = "vote-in-progress";
-// everyone voted
-const PHASE_VOTING_VOTE_FINISHED = "vote-finished";
+// player has voted
+const PHASE_VOTING_VOTE_DONE = "player-vote-done";
 
 const PHASE_ORDER_VOTING = [
     PHASE_VOTING_CAST_VOTE,
-    PHASE_VOTING_VOTE_IN_PROGRESS,
-    PHASE_VOTING_VOTE_FINISHED
+    PHASE_VOTING_VOTE_DONE,
 ];
 
 
@@ -144,7 +141,7 @@ module.exports = {
     // GET request to get current vote counts
     GET_VOTES: "/get-vote-counts",
     GET_VOTES_RESULT: "result",
-    GET_VOTES_RESULT_PLAYER_ID: "player-id",
+    GET_VOTES_RESULT_PLAYER: "player",
     GET_VOTES_RESULT_VOTES: "votes",
     GET_VOTES_FINISHED: "finished",
 
@@ -178,8 +175,7 @@ module.exports = {
 
     // === Sub Phase VOTING ===
     PHASE_VOTING_CAST_VOTE: PHASE_VOTING_CAST_VOTE,
-    PHASE_VOTING_VOTE_IN_PROGRESS: PHASE_VOTING_VOTE_IN_PROGRESS,
-    PHASE_VOTING_VOTE_FINISHED: PHASE_VOTING_VOTE_FINISHED,
+    PHASE_VOTING_VOTE_DONE: PHASE_VOTING_VOTE_DONE,
 
     PHASE_ORDER_VOTING: PHASE_ORDER_VOTING
 
