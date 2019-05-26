@@ -166,6 +166,19 @@ export const fetchCanvasState = (callback, errorCallback) => {
         .catch(error => errorCallback(error));
 };
 
+// special async fetchCanvasState for when the order in which things happen actually matters. 
+export const fetchCanvasStateForSaving = async (callback, errorCallback) => {
+    try {
+        const response = await fetch(`${Constants.SERVER_ADDRESS}${Constants.GET_STATE}`, {
+            method: "GET",
+        });
+        const json = await response.json();
+        callback(json);
+    } catch (error) {
+        errorCallback(error);
+    }
+};
+
 // cast a vote for a player to be the fake
 export const castVote = (voteFor, votedBy, callback, errorCallback) => {
     const requestBody = {
@@ -185,5 +198,3 @@ export const castVote = (voteFor, votedBy, callback, errorCallback) => {
         .then(json => callback(json))
         .catch(error => errorCallback(error));
 };
-
-

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import * as Constants from "../../Constants";
 import PropTypes from "prop-types";
 import * as communication from "../communication";
-import * as GameConfig from "../../game/GameConfig";
 import Candidate from "./Candidate";
 
 class CastVote extends Component {

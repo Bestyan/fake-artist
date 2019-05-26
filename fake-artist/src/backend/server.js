@@ -249,7 +249,7 @@ server.put(`${Constants.PUT_VOTE}`, (request, response) => {
     if(!success){
         response.json({
             [Constants.RESPONSE_STATUS]: "fail",
-            [Constants.RESPONSE_MESSAGE]: "vote was rejected. you have already voted or the player you voted for does not exist",
+            [Constants.RESPONSE_MESSAGE]: "vote was rejected",
         });
         return;
     }
@@ -259,6 +259,12 @@ server.put(`${Constants.PUT_VOTE}`, (request, response) => {
         [Constants.RESPONSE_MESSAGE]: `you voted for ${game.getPlayerById(voteForId).name}`,
     });
 });
+
+// GET_VOTES
+
+server.get(`${Constants.GET_VOTES}`, (request, response) => {
+    const result = [];
+})
 
 server.listen(Constants.SERVER_PORT, (error) => {
     if (error) {

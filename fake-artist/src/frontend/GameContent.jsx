@@ -12,6 +12,7 @@ class GameContent extends Component {
   players = null;
   topic = null;
   term = null;
+  drawnPicture = null;
 
   constructor(props) {
     super(props);
@@ -77,6 +78,7 @@ class GameContent extends Component {
         player={this.player}
         players={this.players}
         advancePhase={this.advancePhase}
+        setPicture={picture => this.drawnPicture = picture}
       />
     );
   };
@@ -87,6 +89,7 @@ class GameContent extends Component {
         advancePhase={this.advancePhase}
         player={this.player}
         players={this.players}
+        picture={this.drawnPicture}
       />
     );
   }

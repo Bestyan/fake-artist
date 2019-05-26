@@ -4,6 +4,7 @@ import CastVote from "./CastVote";
 import VoteInProgress from "./VoteInProgress";
 import VoteFinished from "./VoteFinished";
 import PropTypes from "prop-types";
+import styled from "styled-components";
 
 class Voting extends PureComponent {
   constructor(props) {
@@ -15,20 +16,34 @@ class Voting extends PureComponent {
   }
 
   render() {
+
+    let subphaseRender = null;
+    const picture = <CanvasImg src={this.props.picture} alt="your masterpiece"/>;
+
     switch (this.state.subphase) {
 
       case Constants.PHASE_VOTING_CAST_VOTE:
-        return this.renderCastVote();
+        subphaseRender = this.renderCastVote();
+        break;
 
       case Constants.PHASE_VOTING_VOTE_IN_PROGRESS:
-        return this.renderVoteInProgress();
+        subphaseRender = this.renderVoteInProgress();
+        break;
 
       case Constants.PHASE_VOTING_VOTE_FINISHED:
-        return this.renderVoteFinished();
+        subphaseRender = this.renderVoteFinished();
+        break;
 
       default:
-        return <div>Unknown subphase in Voting.render(): {this.state.subphase}</div>;
+        subphaseRender = <div>Unknown subphase in Voting.render(): {this.state.subphase}</div>;
     }
+
+    return (
+      <div>
+        {picture}
+        {subphaseRender}
+      </div>
+    );
   }
 
   renderCastVote = () => {
@@ -76,10 +91,16 @@ class Voting extends PureComponent {
   };
 }
 
+// the img needs a white background because it is transparent
+const CanvasImg = styled.img`
+  background-color: white;
+`;
+
 Voting.propTypes = {
   advancePhase: PropTypes.func.isRequired,
   players: PropTypes.array.isRequired,
-  player: PropTypes.object.isRequired
+  player: PropTypes.object.isRequired,
+  picture: PropTypes.string.isRequired
 };
 
 export default Voting;

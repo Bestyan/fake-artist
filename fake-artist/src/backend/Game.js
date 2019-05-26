@@ -21,9 +21,10 @@ function Game() {
     this.topic = null;
     this.term = null;
 
-    this.votes = {
-        voteCounts: {},
-        voted: []
+    this.voteState = {
+        voteCounts: [],
+        voted: [],
+        isFinished: false
     };
 
     this.currentDrawingRound = 1;
@@ -169,7 +170,10 @@ Game.prototype.tryToStartVotingPhase = function () {
 
     // init vote counts
     for (let i = 0; i < this.players.length; i++) {
-        this.votes.voteCounts[this.players[i]] = 0;
+        this.voteState.voteCounts.push({
+            [Constants.GET_VOTES_RESULT_PLAYER_ID]: this.players[i].id,
+            [Constants.GET_VOTES_RESULT_VOTES]: 0
+        });
     }
 
     console.log("vote counts initialized");
@@ -180,16 +184,45 @@ Game.prototype.tryToStartVotingPhase = function () {
  * @returns {boolean} whether vote was successful
  */
 Game.prototype.voteFor = function(voteForId, votedById){
+    if(!this.isVoting){
+        return false;
+    }
+
+    if(this.voteState.isFinished){
+        return false;
+    }
+
     const votingPlayer = this.getPlayerById(votedById);
+    if(this.voteState.voted.includes(votingPlayer)){
+        return false;
+    }
+
     const votedFor = this.getPlayerById(voteForId);
-    if(this.votes.voted.includes(votingPlayer) || !votedFor){
+    if(!votedFor){
         return false;
     }
 
     // mark player as voted
-    this.votes.voted.push(votingPlayer);
+    this.voteState.voted.push(votingPlayer);
+    
     // increase vote count
-    this.votes.voteCounts[votedFor]++;
+    const voteCounts = this.voteState.voteCounts;
+    for(let i = 0; i < voteCounts.length; i++){
+        const playerVoteState = voteCounts[i];
+        if(playerVoteState[Constants.GET_VOTES_RESULT_PLAYER_ID] === voteForId){
+            playerVoteState[Constants.GET_VOTES_RESULT_VOTES]++;
+            break;
+        }
+    }
+
+    console.log(`${votingPlayer.name} voted for ${votedFor.name}`);
+
+    // if everyone voted, vote is finished
+    if(this.voteState.voted.length === this.players.length){
+        this.voteState.finished = true;
+        console.log("voting has finished");
+    }
+
     return true;
 };
 

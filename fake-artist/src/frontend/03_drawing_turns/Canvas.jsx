@@ -7,6 +7,7 @@ import * as GameConfig from "../../game/GameConfig";
 // brush settings for drawing on the canvas
 const LINE_WIDTH = 5;
 const LINE_JOIN = "round";
+const CANVAS_ID = "draw-area";
 
 /**
  * Canvas cannot have a border. Drawing logic depends on that.
@@ -31,6 +32,8 @@ class Canvas extends PureComponent {
   // interval that pushes updates on the currently drawn line to the server
   updateCurrentLineInterval = null;
 
+  pollingActivePlayerInterval = null;
+
 
   constructor(props) {
     super(props);
@@ -50,7 +53,7 @@ class Canvas extends PureComponent {
     return (
       <div>
         <canvas
-          id="draw-area"
+          id={CANVAS_ID}
           width="600px" // must be set like this, css width/height scales instead of making the canvas larger/smaller
           height="450px"
           onMouseDown={event => { this.startDrawing(); this.draw(event); }}
@@ -63,11 +66,13 @@ class Canvas extends PureComponent {
 
   componentDidMount() {
     this.startFetchCycle();
+    this.startPollingActivePlayer();
   }
 
   componentWillUnmount() {
     this.stopFetchCycle();
     this.stopUpdateCycle();
+    this.stopPollingActivePlayer();
   }
 
   redrawCanvas = () => {
@@ -288,14 +293,80 @@ class Canvas extends PureComponent {
     this.updateCurrentLineInterval = null;
   }
 
+  pollActivePlayer = () => {
+    communication.pollActivePlayer(
+      json => {
+        if (json[Constants.RESPONSE_STATUS] === "fail") {
+          //only ever fails if voting phase has started
+          this.stopPollingActivePlayer();
+          this.props.setActivePlayer(null);
+          this.stopFetchCycle();
+          this.savePicture()
+            .then(() => {
+              this.props.advancePhase();
+            });
+          return;
+        }
+
+        const activePlayer = json[Constants.GET_ACTIVE_PLAYER_ACTIVE_PLAYER];
+        this.props.setActivePlayer(activePlayer);
+      },
+      error => {
+        console.log(error);
+      }
+    )
+  };
+
+  savePicture = async () => {
+    return new Promise(resolve => {
+      communication.fetchCanvasStateForSaving(
+        json => {
+          const lines = json[Constants.GET_STATE_LINES];
+          // in case it's a delayed fetch and drawing has started in the meantime
+          if (this.currentLine.points.length > 0) {
+            lines.push(this.currentLine);
+          }
+
+          this.setState({
+            canvasLines: lines
+          });
+        },
+        error => {
+          console.log(error);
+          // TODO display connection status somewhere
+        }
+      )
+        .then(() => {
+          // just to be safe, redraw canvas
+          this.redrawCanvas();
+
+          // convert canvas to img
+          const base64Data = this.canvas.toDataURL("image/png");
+          this.props.setPicture(base64Data);
+          resolve();
+        });
+    })
+  }
+
+  startPollingActivePlayer = () => {
+    if (this.pollingActivePlayerInterval === null) {
+      this.pollingActivePlayerInterval = setInterval(this.pollActivePlayer, GameConfig.POLLING_INTERVAL_MS);
+    }
+  };
+
+  stopPollingActivePlayer = () => {
+    clearInterval(this.pollingActivePlayerInterval);
+    this.pollingActivePlayerInterval = null;
+  };
+
 }
 
 Canvas.propTypes = {
   player: PropTypes.object.isRequired,
   isMyTurn: PropTypes.func.isRequired,
-  startPolling: PropTypes.func.isRequired,
-  stopPolling: PropTypes.func.isRequired,
-  finishTurn: PropTypes.func.isRequired
+  finishTurn: PropTypes.func.isRequired,
+  setActivePlayer: PropTypes.func.isRequired,
+  setPicture: PropTypes.func.isRequired
 }
 
 export default Canvas;

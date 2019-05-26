@@ -13,7 +13,7 @@ module.exports = {
     DISPLAY_TERM_TIME_MS: 2000,
 
     // polling interval to fetch the current state of the canvas
-    //smaller number -> higher load, but smoother drawing. never go below 50
+    // smaller number -> higher load, but smoother drawing. never go below 50
     CANVAS_UPDATE_INTERVAL_MS: 1000,
 
     // number of players at which the game is launched

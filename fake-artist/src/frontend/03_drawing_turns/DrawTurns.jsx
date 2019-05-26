@@ -7,8 +7,6 @@ import * as GameConfig from "../../game/GameConfig";
 
 class DrawTurns extends PureComponent {
 
-  pollingActivePlayerInterval = null;
-
   constructor(props) {
     super(props);
 
@@ -33,20 +31,13 @@ class DrawTurns extends PureComponent {
         <Canvas
           player={this.props.player}
           isMyTurn={this.isMyTurn}
-          startPolling={this.startPollingActivePlayer}
-          stopPolling={this.stopPollingActivePlayer}
           finishTurn={this.finishTurn}
+          setActivePlayer={this.setActivePlayer}
+          advancePhase={this.props.advancePhase}
+          setPicture={this.props.setPicture}
         />
       </div>
     );
-  }
-
-  componentDidMount() {
-    this.startPollingActivePlayer();
-  }
-
-  componentWillUnmount() {
-    this.stopPollingActivePlayer();
   }
 
   isMyTurn = () => {
@@ -61,46 +52,20 @@ class DrawTurns extends PureComponent {
     this.setState({
       activePlayer: null
     });
+  };
+
+  setActivePlayer = player => {
+    this.setState({
+      activePlayer: player
+    });
   }
-
-  pollActivePlayer = () => {
-    communication.pollActivePlayer(
-      json => {
-        if(json[Constants.RESPONSE_STATUS] === "fail"){
-          //only ever fails if voting phase has started
-          this.stopPollingActivePlayer();
-          this.props.advancePhase();
-          return;
-        }
-
-        const activePlayer = json[Constants.GET_ACTIVE_PLAYER_ACTIVE_PLAYER];
-        this.setState({
-          activePlayer: activePlayer
-        });
-      },
-      error => {
-        console.log(error);
-      }
-    )
-  };
-
-  startPollingActivePlayer = () => {
-    if (this.pollingActivePlayerInterval === null) {
-      this.pollingActivePlayerInterval = setInterval(this.pollActivePlayer, GameConfig.POLLING_INTERVAL_MS);
-    }
-  };
-
-  stopPollingActivePlayer = () => {
-    clearInterval(this.pollingActivePlayerInterval);
-    this.pollingActivePlayerInterval = null;
-  };
-
 }
 
 DrawTurns.propTypes = {
   player: PropTypes.object.isRequired,
   players: PropTypes.array.isRequired,
-  advancePhase: PropTypes.func.isRequired
+  advancePhase: PropTypes.func.isRequired,
+  setPicture: PropTypes.func.isRequired
 };
 
 export default DrawTurns;
