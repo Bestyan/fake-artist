@@ -280,6 +280,30 @@ server.get(`${Constants.GET_FAKE_DETECTED}`, (request, response) => {
     });
 });
 
+// PUT_GUESS
+server.put(`${Constants.PUT_GUESS}`, (request, response) => {
+    const data = request.body;
+    const playerId = data[Constants.PUT_GUESS_PLAYER_ID];
+    const guess = data[Constants.PUT_GUESS_GUESS];
+
+    const isValid = game.evaluateGuess(guess, playerId);
+
+    if(!isValid){
+        response.json({
+            [Constants.RESPONSE_STATUS]: "fail",
+            [Constants.RESPONSE_MESSAGE]: "guess was rejected"
+        });
+        return;
+    }
+
+    response.json({
+        [Constants.RESPONSE_STATUS]: "success",
+        [Constants.RESPONSE_MESSAGE]: "guess was evaluated",
+        [Constants.PUT_GUESS_IS_CORRECT]: game.guessEvaluation.isCorrect,
+        [Constants.PUT_GUESS_TERM]: game.term
+    });
+});
+
 server.listen(Constants.SERVER_PORT, (error) => {
     if (error) {
         // port is already in use or something else went wrong

@@ -58,6 +58,9 @@ class AwaitTopic extends Component {
         const topic = json[Constants.POST_TOPIC_AND_TERM_TOPIC];
         const term = json[Constants.POST_TOPIC_AND_TERM_TERM];
 
+        this.props.setTopic(topic);
+        this.props.setTerm(term);
+
         this.setState({
           topic: topic,
           term: term

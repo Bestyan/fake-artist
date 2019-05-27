@@ -156,6 +156,13 @@ module.exports = {
     GET_FAKE_DETECTED_FAKE_PLAYER: "fake-player",
     GET_FAKE_DETECTED_NOT_DETECTED_BECAUSE: "not-detected-because",
 
+    // PUT request to submit the fake's guess
+    PUT_GUESS: "/submit-fake-guess",
+    PUT_GUESS_PLAYER_ID: "player-id",
+    PUT_GUESS_GUESS: "guess",
+    PUT_GUESS_TERM: "term",
+    PUT_GUESS_IS_CORRECT: "is-correct",
+
     // ============================================================
     // Game Logic Constants
 

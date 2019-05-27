@@ -199,6 +199,7 @@ export const castVote = (voteFor, votedBy, callback, errorCallback) => {
         .catch(error => errorCallback(error));
 };
 
+// fetch the vote results
 export const fetchVotes = (callback, errorCallback) => {
     fetch(`${Constants.SERVER_ADDRESS}${Constants.GET_VOTES}`, {
             method: "GET"
@@ -206,8 +207,9 @@ export const fetchVotes = (callback, errorCallback) => {
         .then(response => response.json())
         .then(json => callback(json))
         .catch(error => errorCallback(error));
-}
+};
 
+// fetch the vote evaluation (fake is detected or not)
 export const fetchEvaluation = (callback, errorCallback) => {
     fetch(`${Constants.SERVER_ADDRESS}${Constants.GET_FAKE_DETECTED}`, {
             method: "GET"
@@ -215,4 +217,24 @@ export const fetchEvaluation = (callback, errorCallback) => {
         .then(response => response.json())
         .then(json => callback(json))
         .catch(error => errorCallback(error));
-}
+};
+
+// submit the fake's guess
+export const submitGuess = (guess, id, callback, errorCallback) => {
+    const requestBody = {
+        action: "fake-guess",
+        [Constants.PUT_GUESS_PLAYER_ID]: id,
+        [Constants.PUT_GUESS_GUESS]: guess
+    }
+
+    fetch(`${Constants.SERVER_ADDRESS}${Constants.PUT_GUESS}`, {
+            method: "PUT",
+            body: JSON.stringify(requestBody),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(json => callback(json))
+        .catch(error => errorCallback(error));
+};

@@ -29,7 +29,7 @@ class GameContent extends Component {
     const currentPhaseIndex = Constants.PHASE_ORDER.indexOf(this.state.phase);
     const nextPhase = Constants.PHASE_ORDER[currentPhaseIndex + 1];
 
-    console.log(`advancing to phase '${nextPhase}'`)
+    console.log(`advancing to phase '${nextPhase}'`);
     this.setState({
       phase: nextPhase
     });
@@ -105,7 +105,9 @@ class GameContent extends Component {
   renderFakeGuess = () => {
     return (
       <FakeGuess
-
+        player={this.player}
+        term={this.term}
+        topic={this.topic}
       />
     );
   }

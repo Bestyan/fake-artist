@@ -250,6 +250,6 @@ This must be a POST request because the fake will only receive the topic
 
         {
             has-guessed-yet: true | false,
-            guess: "..."
+            guess: "...",
+            is-correct: true | false
         }
-

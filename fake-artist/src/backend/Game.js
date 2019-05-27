@@ -39,7 +39,13 @@ function Game() {
     this.voteEvaluation = {
         isTied: false,
         fake: null
-    }
+    };
+
+    this.guessEvaluation = {
+        guess: null,
+        isCorrect: false,
+        isEvaluated: false
+    };
 
     this.currentDrawingRound = 1;
     // game is in voting phase
@@ -239,13 +245,16 @@ Game.prototype.voteFor = function (voteForId, votedById) {
 };
 
 Game.prototype.evaluateVoteResults = function () {
+
+    console.log("evaluating vote results");
+
     let currentFake = null;
     let isTied = false;
     for (let i = 0; i < this.voteState.result.length; i++) {
         const result = this.voteState.result[i];
 
         if (currentFake === null) {
-            currentFake = result;
+            currentFake = result.player;
             continue;
         }
 
@@ -255,7 +264,7 @@ Game.prototype.evaluateVoteResults = function () {
         }
 
         if (result.votes > currentFake.votes) {
-            currentFake = result;
+            currentFake = result.player;
             isTied = false;
         }
     }
@@ -263,7 +272,10 @@ Game.prototype.evaluateVoteResults = function () {
     this.voteEvaluation = {
         isTied: isTied,
         fake: currentFake
-    }
+    };
+
+    console.log(this.voteEvaluation);
+
 }
 
 Game.prototype.isFakeDetected = function () {
@@ -278,17 +290,55 @@ Game.prototype.isFakeDetected = function () {
     }
 
     // no tied vote and fake has most votes
+    console.log(`${this.voteEvaluation.fake.role} === fake = ${(this.voteEvaluation.fake.role === "fake")}`)
     if (this.voteEvaluation.fake.role === "fake") {
         return true;
+    } else{
+        // not tied but wrong person has most votes
+        return false;
     }
 }
 
 Game.prototype.getNotDetectedBecause = function () {
-    if(this.voteEvaluation.isTied){
+    if (this.voteEvaluation.isTied) {
         return "the vote is tied";
     }
 
+    if (this.isFakeDetected()) {
+        return "";
+    }
+
     return "the fake did not receive the most votes";
+}
+
+Game.prototype.evaluateGuess = function (guess, playerId) {
+    const player = this.getPlayerById(playerId);
+
+    if (!player) {
+        return false;
+    }
+
+    if (player.role !== "fake") {
+        return false;
+    }
+
+    if (player !== this.voteEvaluation.fake) {
+        return false;
+    }
+
+    console.log("evaluating the fake's guess...");
+
+    const isCorrect = guess.trim().toLowerCase() === this.term.trim().toLowerCase();
+
+    console.log(`guess: ${guess}, term: ${this.term}, isCorrect: ${isCorrect}`);
+
+    this.guessEvaluation = {
+        guess: guess,
+        isCorrect: isCorrect,
+        isEvaluated: true
+    };
+
+    return true;
 }
 
 module.exports = Game;
