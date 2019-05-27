@@ -261,7 +261,6 @@ server.put(`${Constants.PUT_VOTE}`, (request, response) => {
 });
 
 // GET_VOTES
-
 server.get(`${Constants.GET_VOTES}`, (request, response) => {
     const result = game.voteState.result;
     const finished = game.voteState.isFinished;
@@ -270,7 +269,16 @@ server.get(`${Constants.GET_VOTES}`, (request, response) => {
         [Constants.GET_VOTES_RESULT]: result,
         [Constants.GET_VOTES_FINISHED]: finished
     });
-})
+});
+
+// GET_FAKE_DETECTED
+server.get(`${Constants.GET_FAKE_DETECTED}`, (request, response) => {
+    response.json({
+        [Constants.GET_FAKE_DETECTED_IS_DETECTED]: game.isFakeDetected(),
+        [Constants.GET_FAKE_DETECTED_FAKE_PLAYER]: game.voteEvaluation.fake,
+        [Constants.GET_FAKE_DETECTED_NOT_DETECTED_BECAUSE]: game.getNotDetectedBecause()
+    });
+});
 
 server.listen(Constants.SERVER_PORT, (error) => {
     if (error) {

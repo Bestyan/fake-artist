@@ -1,4 +1,3 @@
-
 // node server
 const SERVER_URL = "http://localhost";
 const SERVER_PORT = 3001;
@@ -19,12 +18,15 @@ const PHASE_PRE_DRAW = "question-master-declares-topic-and-term";
 const PHASE_DRAWING_TURNS = "drawing-turns";
 // players vote on who's the fake
 const PHASE_VOTING = "voting";
+// fake guesses the term
+const PHASE_FAKE_GUESS = "fake-guess";
 
 const PHASE_ORDER = [
     PHASE_PRE_GAME,
     PHASE_PRE_DRAW,
     PHASE_DRAWING_TURNS,
-    PHASE_VOTING
+    PHASE_VOTING,
+    PHASE_FAKE_GUESS
 ]
 
 // === Sub Game Phases ===
@@ -53,10 +55,13 @@ const PHASE_ORDER_PRE_DRAW = [
 const PHASE_VOTING_CAST_VOTE = "cast-vote";
 // player has voted
 const PHASE_VOTING_VOTE_DONE = "player-vote-done";
+// everyone has voted
+const PHASE_VOTING_EVALUATION = "vote-evaluation";
 
 const PHASE_ORDER_VOTING = [
     PHASE_VOTING_CAST_VOTE,
     PHASE_VOTING_VOTE_DONE,
+    PHASE_VOTING_EVALUATION
 ];
 
 
@@ -145,10 +150,11 @@ module.exports = {
     GET_VOTES_RESULT_VOTES: "votes",
     GET_VOTES_FINISHED: "finished",
 
-    // POST request to get evaluation of the vote
-    POST_VOTE_EVALUATION: "/get-vote-evaluation",
-    POST_VOTE_EVALUATION_PLAYER_ID: "player-id",
-    POST_VOTE_EVALUATION_RESULT: "evaluation-result",
+    // GET request to get whether fake was detected
+    GET_FAKE_DETECTED: "/is-fake-detected",
+    GET_FAKE_DETECTED_IS_DETECTED: "fake-is-detected",
+    GET_FAKE_DETECTED_FAKE_PLAYER: "fake-player",
+    GET_FAKE_DETECTED_NOT_DETECTED_BECAUSE: "not-detected-because",
 
     // ============================================================
     // Game Logic Constants
@@ -158,6 +164,7 @@ module.exports = {
     PHASE_PRE_DRAW: PHASE_PRE_DRAW,
     PHASE_DRAWING_TURNS: PHASE_DRAWING_TURNS,
     PHASE_VOTING: PHASE_VOTING,
+    PHASE_FAKE_GUESS: PHASE_FAKE_GUESS,
 
     PHASE_ORDER: PHASE_ORDER,
 
@@ -176,6 +183,7 @@ module.exports = {
     // === Sub Phase VOTING ===
     PHASE_VOTING_CAST_VOTE: PHASE_VOTING_CAST_VOTE,
     PHASE_VOTING_VOTE_DONE: PHASE_VOTING_VOTE_DONE,
+    PHASE_VOTING_EVALUATION: PHASE_VOTING_EVALUATION,
 
     PHASE_ORDER_VOTING: PHASE_ORDER_VOTING
 

@@ -5,6 +5,7 @@ import PreGame from "./01_pregame/PreGame";
 import DrawTurns from "./03_drawing_turns/DrawTurns";
 import PreDraw from "./02_predraw/PreDraw";
 import Voting from "./04_voting/Voting";
+import FakeGuess from "./05_fake_guess/FakeGuess";
 
 class GameContent extends Component {
 
@@ -13,6 +14,8 @@ class GameContent extends Component {
   topic = null;
   term = null;
   drawnPicture = null;
+  isFakeDetected = false;
+  fake = null;
 
   constructor(props) {
     super(props);
@@ -45,6 +48,9 @@ class GameContent extends Component {
 
       case Constants.PHASE_VOTING:
         return this.renderVoting();
+
+      case Constants.PHASE_FAKE_GUESS:
+        return this.renderFakeGuess();
 
       default:
         return <div>Unknown Phase in GameContent.render(): {this.state.phase}</div>;
@@ -90,6 +96,16 @@ class GameContent extends Component {
         player={this.player}
         players={this.players}
         picture={this.drawnPicture}
+        setDetected={detected => this.isFakeDetected = detected}
+        setFake={fake => this.fake = fake}
+      />
+    );
+  }
+
+  renderFakeGuess = () => {
+    return (
+      <FakeGuess
+
       />
     );
   }

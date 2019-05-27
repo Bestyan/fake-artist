@@ -207,13 +207,30 @@ This must be a POST request because the fake will only receive the topic
             finished: true | false
         }
 
-## Get Vote Evaluation
+## Get result of voting -> Fake detected yes/no
 
-1. request (`POST_VOTE_EVALUATION`)
+1. request (`GET_FAKE_DETECTED`)
+
+2. response
 
         {
-            action: "vote-evaluation",
-            player-id: ${id}
+            fake-is-detected: true | false,
+            not-detected-because: "...",
+            fake-player: {
+                id: ${id},
+                name: ${name},
+                color: ${color}
+            }
+        }
+
+## Fake takes a guess
+
+1. request (`PUT_GUESS`)
+
+        {
+            action: "fake-guess",
+            player-id: ${id},
+            guess: "..."
         }
 
 2. response
@@ -221,5 +238,18 @@ This must be a POST request because the fake will only receive the topic
         {
             status: "success" | "fail",
             message: "...",
-            evaluation-result: "artist-win" | "wait-for-fake" | "detected" | ... TODO
+            is-correct: true | false,
+            term: "..."
         }
+
+## get the Fake's guess
+
+1. request (`GET_GUESS`)
+
+2. response
+
+        {
+            has-guessed-yet: true | false,
+            guess: "..."
+        }
+

@@ -207,3 +207,12 @@ export const fetchVotes = (callback, errorCallback) => {
         .then(json => callback(json))
         .catch(error => errorCallback(error));
 }
+
+export const fetchEvaluation = (callback, errorCallback) => {
+    fetch(`${Constants.SERVER_ADDRESS}${Constants.GET_FAKE_DETECTED}`, {
+            method: "GET"
+        })
+        .then(response => response.json())
+        .then(json => callback(json))
+        .catch(error => errorCallback(error));
+}

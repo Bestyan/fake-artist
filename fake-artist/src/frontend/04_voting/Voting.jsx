@@ -4,6 +4,7 @@ import CastVote from "./CastVote";
 import VoteDone from "./VoteDone";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import VoteEvaluation from "./VoteEvaluation";
 
 class Voting extends PureComponent {
   constructor(props) {
@@ -17,7 +18,7 @@ class Voting extends PureComponent {
   render() {
 
     let subphaseRender = null;
-    const picture = <CanvasImg src={this.props.picture} alt="your masterpiece"/>;
+    const picture = <CanvasImg src={this.props.picture} alt="your masterpiece" />;
 
     switch (this.state.subphase) {
 
@@ -27,6 +28,10 @@ class Voting extends PureComponent {
 
       case Constants.PHASE_VOTING_VOTE_DONE:
         subphaseRender = this.renderVoteDone();
+        break;
+
+      case Constants.PHASE_VOTING_EVALUATION:
+        subphaseRender = this.renderEvaluation();
         break;
 
       default:
@@ -59,6 +64,16 @@ class Voting extends PureComponent {
     )
   };
 
+  renderEvaluation = () => {
+    return (
+      <VoteEvaluation
+        advanceSubphase={this.advanceSubphase}
+        setDetected={this.props.setDetected}
+        setFake={this.props.setFake}
+      />
+    );
+  };
+
   advanceSubphase = () => {
     const phaseOrder = Constants.PHASE_ORDER_VOTING;
 
@@ -87,7 +102,9 @@ Voting.propTypes = {
   advancePhase: PropTypes.func.isRequired,
   players: PropTypes.array.isRequired,
   player: PropTypes.object.isRequired,
-  picture: PropTypes.string.isRequired
+  picture: PropTypes.string.isRequired,
+  setDetected: PropTypes.func.isRequired,
+  setFake: PropTypes.func.isRequired
 };
 
 export default Voting;

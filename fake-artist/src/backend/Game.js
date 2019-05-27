@@ -36,11 +36,14 @@ function Game() {
         isFinished: false
     };
 
+    this.voteEvaluation = {
+        isTied: false,
+        fake: null
+    }
+
     this.currentDrawingRound = 1;
     // game is in voting phase
     this.isVoting = false;
-    // voting has finished
-    this.isDisplayingVoteResults = false;
 }
 
 Game.prototype.addPlayer = function (playerName) {
@@ -192,32 +195,32 @@ Game.prototype.tryToStartVotingPhase = function () {
 /**
  * @returns {boolean} whether vote was successful
  */
-Game.prototype.voteFor = function(voteForId, votedById){
-    if(!this.isVoting){
+Game.prototype.voteFor = function (voteForId, votedById) {
+    if (!this.isVoting) {
         return false;
     }
 
-    if(this.voteState.isFinished){
+    if (this.voteState.isFinished) {
         return false;
     }
 
     const votingPlayer = this.getPlayerById(votedById);
-    if(this.voteState.voted.includes(votingPlayer)){
+    if (this.voteState.voted.includes(votingPlayer)) {
         return false;
     }
 
     const votedFor = this.getPlayerById(voteForId);
-    if(!votedFor){
+    if (!votedFor) {
         return false;
     }
 
     // mark player as voted
     this.voteState.voted.push(votingPlayer);
-    
+
     // increase vote count
     const voteCounts = this.voteState.result;
-    for(let i = 0; i < voteCounts.length; i++){
-        if(voteCounts[i].player.id === voteForId){
+    for (let i = 0; i < voteCounts.length; i++) {
+        if (voteCounts[i].player.id === voteForId) {
             voteCounts[i].votes++;
             break;
         }
@@ -226,13 +229,67 @@ Game.prototype.voteFor = function(voteForId, votedById){
     console.log(`${votingPlayer.name} voted for ${votedFor.name}`);
 
     // if everyone voted, vote is finished
-    if(this.voteState.voted.length === this.players.length){
+    if (this.voteState.voted.length === this.players.length) {
         this.voteState.isFinished = true;
         console.log("voting has finished");
+        this.evaluateVoteResults();
     }
 
     return true;
 };
+
+Game.prototype.evaluateVoteResults = function () {
+    let currentFake = null;
+    let isTied = false;
+    for (let i = 0; i < this.voteState.result.length; i++) {
+        const result = this.voteState.result[i];
+
+        if (currentFake === null) {
+            currentFake = result;
+            continue;
+        }
+
+        if (result.votes === currentFake.votes) {
+            isTied = true;
+            continue;
+        }
+
+        if (result.votes > currentFake.votes) {
+            currentFake = result;
+            isTied = false;
+        }
+    }
+
+    this.voteEvaluation = {
+        isTied: isTied,
+        fake: currentFake
+    }
+}
+
+Game.prototype.isFakeDetected = function () {
+    // evaluation has not taken place
+    if (this.voteEvaluation.fake === null) {
+        return false;
+    }
+
+    // tied vote means fake is not detected
+    if (this.voteEvaluation.isTied) {
+        return false;
+    }
+
+    // no tied vote and fake has most votes
+    if (this.voteEvaluation.fake.role === "fake") {
+        return true;
+    }
+}
+
+Game.prototype.getNotDetectedBecause = function () {
+    if(this.voteEvaluation.isTied){
+        return "the vote is tied";
+    }
+
+    return "the fake did not receive the most votes";
+}
 
 module.exports = Game;
 
