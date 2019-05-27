@@ -80,6 +80,8 @@ class Guess extends PureComponent {
           term: term,
           isCorrect: isCorrect
         });
+
+        setTimeout(this.props.advancePhase, GameConfig.DISPLAY_GUESS_RESULTS_TIME_MS);
       },
 
       error => {
@@ -94,7 +96,8 @@ class Guess extends PureComponent {
 
 Guess.propTypes = {
   topic: PropTypes.string.isRequired,
-  player: PropTypes.object.isRequired
+  player: PropTypes.object.isRequired,
+  advancePhase: PropTypes.func.isRequired
 }
 
 export default Guess;

@@ -238,3 +238,12 @@ export const submitGuess = (guess, id, callback, errorCallback) => {
         .then(json => callback(json))
         .catch(error => errorCallback(error));
 };
+
+export const fetchGuess = (callback, errorCallback) => {
+    fetch(`${Constants.SERVER_ADDRESS}${Constants.GET_GUESS}`, {
+            method: "GET"
+        })
+        .then(response => response.json())
+        .then(json => callback(json))
+        .catch(error => errorCallback(error));
+};

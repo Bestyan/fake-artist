@@ -249,22 +249,25 @@ Game.prototype.evaluateVoteResults = function () {
     console.log("evaluating vote results");
 
     let currentFake = null;
+    let currentVoteMax = 0;
     let isTied = false;
     for (let i = 0; i < this.voteState.result.length; i++) {
         const result = this.voteState.result[i];
 
         if (currentFake === null) {
             currentFake = result.player;
+            currentVoteMax = result.votes;
             continue;
         }
 
-        if (result.votes === currentFake.votes) {
+        if (result.votes === currentVoteMax) {
             isTied = true;
             continue;
         }
 
-        if (result.votes > currentFake.votes) {
+        if (result.votes > currentVoteMax) {
             currentFake = result.player;
+            currentVoteMax = result.votes;
             isTied = false;
         }
     }
@@ -290,7 +293,6 @@ Game.prototype.isFakeDetected = function () {
     }
 
     // no tied vote and fake has most votes
-    console.log(`${this.voteEvaluation.fake.role} === fake = ${(this.voteEvaluation.fake.role === "fake")}`)
     if (this.voteEvaluation.fake.role === "fake") {
         return true;
     } else{

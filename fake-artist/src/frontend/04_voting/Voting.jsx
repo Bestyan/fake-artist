@@ -67,7 +67,8 @@ class Voting extends PureComponent {
   renderEvaluation = () => {
     return (
       <VoteEvaluation
-        advanceSubphase={this.advanceSubphase}
+        advanceToGuessPhase={this.advanceSubphase}
+        advanceToSummary={this.props.advanceToSummary}
         setDetected={this.props.setDetected}
         setFake={this.props.setFake}
       />
@@ -104,7 +105,8 @@ Voting.propTypes = {
   player: PropTypes.object.isRequired,
   picture: PropTypes.string.isRequired,
   setDetected: PropTypes.func.isRequired,
-  setFake: PropTypes.func.isRequired
+  setFake: PropTypes.func.isRequired,
+  advanceToSummary: PropTypes.func.isRequired
 };
 
 export default Voting;

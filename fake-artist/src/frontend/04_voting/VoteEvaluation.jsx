@@ -79,7 +79,13 @@ class VoteEvaluation extends PureComponent {
           notDetectedBecause: notDetectedBecause
         });
 
-        setTimeout(this.props.advanceSubphase, GameConfig.DISPLAY_FAKE_DETECTION_TIME_MS);
+        let advance = null;
+        if(isDetected){
+          advance = this.props.advanceToGuessPhase;
+        } else{
+          advance = this.props.advanceToSummary;
+        }
+        setTimeout(advance, GameConfig.DISPLAY_FAKE_DETECTION_TIME_MS);
       },
       error => {
         console.log(error);
@@ -91,7 +97,8 @@ class VoteEvaluation extends PureComponent {
 }
 
 VoteEvaluation.propTypes = {
-  advanceSubphase: PropTypes.func.isRequired,
+  advanceToGuessPhase: PropTypes.func.isRequired,
+  advanceToSummary: PropTypes.func.isRequired,
   setDetected: PropTypes.func.isRequired,
   setFake: PropTypes.func.isRequired
 };

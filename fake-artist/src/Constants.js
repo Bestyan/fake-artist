@@ -20,13 +20,16 @@ const PHASE_DRAWING_TURNS = "drawing-turns";
 const PHASE_VOTING = "voting";
 // fake guesses the term
 const PHASE_FAKE_GUESS = "fake-guess";
+// summary of the game. winners and losers
+const PHASE_SUMMARY = "summary";
 
 const PHASE_ORDER = [
     PHASE_PRE_GAME,
     PHASE_PRE_DRAW,
     PHASE_DRAWING_TURNS,
     PHASE_VOTING,
-    PHASE_FAKE_GUESS
+    PHASE_FAKE_GUESS,
+    PHASE_SUMMARY
 ]
 
 // === Sub Game Phases ===
@@ -162,6 +165,12 @@ module.exports = {
     PUT_GUESS_GUESS: "guess",
     PUT_GUESS_TERM: "term",
     PUT_GUESS_IS_CORRECT: "is-correct",
+
+    // GET request to fetch the fake's guess
+    GET_GUESS: "/get-fake-guess",
+    GET_GUESS_HAS_GUESSED: "has-guessed-yet",
+    GET_GUESS_GUESS: "guess",
+    GET_GUESS_IS_CORRECT: "is-correct",
 
     // ============================================================
     // Game Logic Constants

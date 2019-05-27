@@ -18,6 +18,9 @@ module.exports = {
     // amount of time fake detection results are displayed
     DISPLAY_FAKE_DETECTION_TIME_MS: 5000,
 
+    // amount of time the fake's guess result is displayed
+    DISPLAY_GUESS_RESULTS_TIME_MS: 3000,
+
     // polling interval to fetch the current state of the canvas
     // smaller number -> higher load, but smoother drawing. never go below 50
     CANVAS_UPDATE_INTERVAL_MS: 1000,

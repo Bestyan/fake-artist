@@ -35,6 +35,13 @@ class GameContent extends Component {
     });
   }
 
+  advanceToSummary = () => {
+    console.log(`skipping to phase '${Constants.PHASE_SUMMARY}'`);
+    this.setState({
+      phase: Constants.PHASE_SUMMARY
+    });
+  }
+
   render() {
     switch (this.state.phase) {
       case Constants.PHASE_PRE_GAME:
@@ -98,6 +105,7 @@ class GameContent extends Component {
         picture={this.drawnPicture}
         setDetected={detected => this.isFakeDetected = detected}
         setFake={fake => this.fake = fake}
+        advanceToSummary={this.advanceToSummary}
       />
     );
   }
@@ -108,6 +116,7 @@ class GameContent extends Component {
         player={this.player}
         term={this.term}
         topic={this.topic}
+        advancePhase={this.advancePhase}
       />
     );
   }

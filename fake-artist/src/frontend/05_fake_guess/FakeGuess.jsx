@@ -25,6 +25,7 @@ class FakeGuess extends PureComponent {
       <WaitForGuess 
         term={this.props.term}
         topic={this.props.topic}
+        advancePhase={this.props.advancePhase}
       />
     );
   };
@@ -34,6 +35,7 @@ class FakeGuess extends PureComponent {
       <Guess 
         topic={this.props.topic}
         player={this.props.player}
+        advancePhase={this.props.advancePhase}
       />
     );
   }
@@ -43,7 +45,8 @@ class FakeGuess extends PureComponent {
 FakeGuess.propTypes = {
   player: PropTypes.object.isRequired,
   term: PropTypes.string.isRequired,
-  topic: PropTypes.string.isRequired
+  topic: PropTypes.string.isRequired,
+  advancePhase: PropTypes.func.isRequired
 };
 
 export default FakeGuess;

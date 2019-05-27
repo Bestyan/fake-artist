@@ -85,7 +85,7 @@ server.post(`${Constants.POST_ROLE}`, (request, response) => {
     const playerId = request.body[Constants.POST_ROLE_PLAYER_ID];
     const isValid = game.isValidPlayer(playerId);
 
-    if(!isValid){
+    if (!isValid) {
         response.json({
             [Constants.RESPONSE_STATUS]: "fail",
             [Constants.RESPONSE_MESSAGE]: `player with id ${playerId} does not exist`
@@ -136,7 +136,7 @@ server.put(`${Constants.PUT_TERM}`, (request, response) => {
 server.post(`${Constants.POST_TOPIC_AND_TERM}`, (request, response) => {
     const playerId = request.body[Constants.POST_TOPIC_AND_TERM_PLAYER_ID];
 
-    if(!game.isValidPlayer(playerId)){
+    if (!game.isValidPlayer(playerId)) {
         response.json({
             [Constants.RESPONSE_STATUS]: "fail",
             [Constants.RESPONSE_MESSAGE]: `player with id ${playerId} does not exist`
@@ -156,7 +156,7 @@ server.post(`${Constants.POST_TOPIC_AND_TERM}`, (request, response) => {
 
 // GET_ACTIVE_PLAYER
 server.get(`${Constants.GET_ACTIVE_PLAYER}`, (request, response) => {
-    if(game.isVoting){
+    if (game.isVoting) {
         response.json({
             [Constants.RESPONSE_STATUS]: "fail",
             [Constants.RESPONSE_MESSAGE]: "Voting phase has started"
@@ -246,7 +246,7 @@ server.put(`${Constants.PUT_VOTE}`, (request, response) => {
     const voteForId = data[Constants.PUT_VOTE_VOTE];
     const votingPlayerId = data[Constants.PUT_VOTE_VOTING_PLAYER];
     const success = game.voteFor(voteForId, votingPlayerId);
-    if(!success){
+    if (!success) {
         response.json({
             [Constants.RESPONSE_STATUS]: "fail",
             [Constants.RESPONSE_MESSAGE]: "vote was rejected",
@@ -264,7 +264,7 @@ server.put(`${Constants.PUT_VOTE}`, (request, response) => {
 server.get(`${Constants.GET_VOTES}`, (request, response) => {
     const result = game.voteState.result;
     const finished = game.voteState.isFinished;
-    
+
     response.json({
         [Constants.GET_VOTES_RESULT]: result,
         [Constants.GET_VOTES_FINISHED]: finished
@@ -288,7 +288,7 @@ server.put(`${Constants.PUT_GUESS}`, (request, response) => {
 
     const isValid = game.evaluateGuess(guess, playerId);
 
-    if(!isValid){
+    if (!isValid) {
         response.json({
             [Constants.RESPONSE_STATUS]: "fail",
             [Constants.RESPONSE_MESSAGE]: "guess was rejected"
@@ -301,6 +301,16 @@ server.put(`${Constants.PUT_GUESS}`, (request, response) => {
         [Constants.RESPONSE_MESSAGE]: "guess was evaluated",
         [Constants.PUT_GUESS_IS_CORRECT]: game.guessEvaluation.isCorrect,
         [Constants.PUT_GUESS_TERM]: game.term
+    });
+});
+
+// GET_GUESS
+server.get(`${Constants.GET_GUESS}`, (request, response) => {
+    const guessResult = game.guessEvaluation;
+    response.json({
+        [Constants.GET_GUESS_HAS_GUESSED]: guessResult.isEvaluated,
+        [Constants.GET_GUESS_GUESS]: guessResult.guess,
+        [Constants.GET_GUESS_IS_CORRECT]: guessResult.isCorrect
     });
 });
 
