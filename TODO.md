@@ -51,13 +51,13 @@
 - in the pre-draw Phase, one player is chosen as the fake
 - the fake receives an X instead of the term
 
-### v0.5 Voting Phase
+### v0.5 Voting Phase **(done)**
 
 - the drawing phase is limited to 2 rounds
 - afterwards, every player votes for another player to be the Fake
 - Voting results are displayed
 
-### v0.6 The Fake can take a guess
+### v0.6 The Fake can take a guess **(done)**
 
 - if the Fake is voted for the most (not tied), his identity is revealed
 - the Fake can now take a guess on the term
