@@ -172,6 +172,17 @@ module.exports = {
     GET_GUESS_GUESS: "guess",
     GET_GUESS_IS_CORRECT: "is-correct",
 
+    // GET request to fetch game summary
+    GET_SUMMARY: "/get-summary",
+    GET_SUMMARY_PLAYERS: "players",
+    GET_SUMMARY_TOPIC: "topic",
+    GET_SUMMARY_TERM: "term",
+    GET_SUMMARY_PICTURE: "picture",
+    GET_SUMMARY_VOTE_RESULTS: "vote-results",
+    GET_SUMMARY_IS_FAKE_DETECTED: "is-fake-detected",
+    GET_SUMMARY_GUESS: "guess",
+    GET_SUMMARY_IS_GUESS_CORRECT: "is-guess-correct",
+
     // ============================================================
     // Game Logic Constants
 
@@ -181,6 +192,7 @@ module.exports = {
     PHASE_DRAWING_TURNS: PHASE_DRAWING_TURNS,
     PHASE_VOTING: PHASE_VOTING,
     PHASE_FAKE_GUESS: PHASE_FAKE_GUESS,
+    PHASE_SUMMARY: PHASE_SUMMARY,
 
     PHASE_ORDER: PHASE_ORDER,
 

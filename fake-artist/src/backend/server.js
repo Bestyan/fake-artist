@@ -4,8 +4,7 @@
 
 const Constants = require("../Constants");
 const Game = require("./Game");
-
-const util = require('util');
+const GameConfig = require("../shared/GameConfig");
 /**
  * ============================================ SERVER CONFIG ============================================
  */
@@ -27,8 +26,6 @@ server.use(cors(corsOptions));
  * ========================================== SERVER CONFIG END ==========================================
  */
 
-// contains the completed lines in the same format as incompleteLine (see below)
-const completedLines = [];
 const game = new Game();
 /**
  * line that is currently being drawn
@@ -172,7 +169,7 @@ server.get(`${Constants.GET_ACTIVE_PLAYER}`, (request, response) => {
 // GET_STATE
 server.get(`${Constants.GET_STATE}`, (request, response) => {
 
-    const lines = completedLines.slice(0);
+    const lines = game.completedLines.slice(0);
     if (incompleteLine.points) {
         lines.push(incompleteLine);
     }
@@ -221,7 +218,7 @@ server.put(`${Constants.PUT_LINE}`, (request, response) => {
         return;
     }
 
-    completedLines.push(data[Constants.PUT_LINE_FINISHED_LINE]);
+    game.completedLines.push(data[Constants.PUT_LINE_FINISHED_LINE]);
 
     // reset incomplete line
     // there is no check required, because updates on a new line aren't allowed until the last one has been submitted
@@ -322,3 +319,28 @@ server.listen(Constants.SERVER_PORT, (error) => {
 
     console.log(`server is listening on ${Constants.SERVER_PORT}`);
 });
+
+// GET_SUMMARY
+server.get(`${Constants.GET_SUMMARY}`, (request, response) => {
+
+    if(!game.isFinished){
+        response.json({
+            [Constants.RESPONSE_STATUS]: "fail",
+            [Constants.RESPONSE_MESSAGE]: "game has not concluded yet"
+        });
+        return;
+    }
+
+    response.json({
+        [Constants.GET_SUMMARY_PLAYERS]: game.players,
+        [Constants.GET_SUMMARY_TOPIC]: game.topic,
+        [Constants.GET_SUMMARY_TERM]: game.term,
+        [Constants.GET_SUMMARY_PICTURE]: game.picture,
+        [Constants.GET_SUMMARY_VOTE_RESULTS]: game.voteState.result,
+        [Constants.GET_SUMMARY_IS_FAKE_DETECTED]: game.isFakeDetected(),
+        [Constants.GET_SUMMARY_GUESS]: game.guessEvaluation.guess,
+        [Constants.GET_SUMMARY_IS_GUESS_CORRECT]: game.guessEvaluation.isCorrect
+    });
+
+    setTimeout(game.reset.bind(game), GameConfig.RESET_TIMEOUT_MS);
+})

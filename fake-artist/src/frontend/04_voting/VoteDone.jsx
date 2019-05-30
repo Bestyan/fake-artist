@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import PlayerVoteResult from "./PlayerVoteResult";
 import * as communication from "../communication";
-import * as GameConfig from "../../game/GameConfig";
+import * as GameConfig from "../../shared/GameConfig";
 
 class VoteDone extends PureComponent {
 

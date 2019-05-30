@@ -11,18 +11,18 @@ class ChooseName extends Component {
   nameInput = null;
 
   render() {
-    return (  
+    return (
       <form onSubmit={event => this.submitName(event)}>
         
         <div>
           <Grid align="center">
-        <h2>Choose a name</h2>
-        <input type="text" placeholder="Your Name" style={{padding:9}} ref={input => this.nameInput = input} />
-        <Button variant="contained" color="inherited" type="submit">go</Button>
+            <h2>Choose a name</h2>
+            <input type="text" placeholder="Your Name" style={{ padding: 9 }} ref={input => this.nameInput = input} />
+            <Button variant="contained" color="inherited" type="submit">go</Button>
           </Grid>
         </div>
       </form>
-      
+
     );
   }
 

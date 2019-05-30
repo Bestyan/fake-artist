@@ -247,3 +247,12 @@ export const fetchGuess = (callback, errorCallback) => {
         .then(json => callback(json))
         .catch(error => errorCallback(error));
 };
+
+export const fetchSummary = (callback, errorCallback) => {
+    fetch(`${Constants.SERVER_ADDRESS}${Constants.GET_SUMMARY}`, {
+            method: "GET"
+        })
+        .then(response => response.json())
+        .then(json => callback(json))
+        .catch(error => errorCallback(error));
+};

@@ -3,8 +3,8 @@ import * as Constants from "../../Constants";
 import CastVote from "./CastVote";
 import VoteDone from "./VoteDone";
 import PropTypes from "prop-types";
-import styled from "styled-components";
 import VoteEvaluation from "./VoteEvaluation";
+import {CanvasImg} from "../components/Components";
 
 class Voting extends PureComponent {
   constructor(props) {
@@ -93,11 +93,6 @@ class Voting extends PureComponent {
     });
   };
 }
-
-// the img needs a white background because it is transparent
-const CanvasImg = styled.img`
-  background-color: white;
-`;
 
 Voting.propTypes = {
   advancePhase: PropTypes.func.isRequired,

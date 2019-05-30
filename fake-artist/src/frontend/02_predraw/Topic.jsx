@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import * as communication from "../communication";
 import * as Constants from "../../Constants";
-import * as GameConfig from "../../game/GameConfig";
+import * as GameConfig from "../../shared/GameConfig";
 
 class Topic extends Component {
 
