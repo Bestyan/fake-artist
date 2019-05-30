@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import GameContent from "./frontend/GameContent";
+import Content from "./frontend/Content";
 import "./App.css";
 
 class App extends Component {
@@ -7,7 +7,7 @@ class App extends Component {
     return (
       <div>
         <header>{/* header */}</header>
-        <GameContent>{/* main */}</GameContent>
+        <Content>{/* main */}</Content>
         <footer>{/* footer */}</footer>
       </div>);
   }

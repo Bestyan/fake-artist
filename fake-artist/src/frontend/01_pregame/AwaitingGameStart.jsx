@@ -28,7 +28,7 @@ class AwaitingGameStart extends PureComponent {
 
     return (
       <div>
-        <div>Players<br />
+        <div><br />
           <ul>{players}</ul>
         </div>
         <div>Game Status: {this.state.status}

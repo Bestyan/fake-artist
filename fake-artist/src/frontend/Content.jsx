@@ -1,6 +1,12 @@
 import React, { Component } from "react";
-import Canvas from "./Canvas";
-import * as Constants from "../Constants";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import GameContent from "./GameContent";
+import Paper from "@material-ui/core/Paper";
+
 
 class Content extends Component {
 
@@ -12,6 +18,17 @@ class Content extends Component {
   render() {
     return (
       <div>
+        <div>
+          <AppBar position="static" color="primary">
+            <Toolbar >
+              <Typography variant="title" color="inherit">
+                Fake Artist
+              </Typography>
+              <Button color="inherit">Rules</Button>
+              <Button color="inherit">Tutorial</Button>
+            </Toolbar>
+           </AppBar>
+           </div>
         <GameContent />
       </div>
     );

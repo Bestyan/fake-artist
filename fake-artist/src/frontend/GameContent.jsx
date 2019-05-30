@@ -6,6 +6,7 @@ import DrawTurns from "./03_drawing_turns/DrawTurns";
 import PreDraw from "./02_predraw/PreDraw";
 import Voting from "./04_voting/Voting";
 import FakeGuess from "./05_fake_guess/FakeGuess";
+import Grid from "@material-ui/core/Grid";
 
 class GameContent extends Component {
 
@@ -43,6 +44,7 @@ class GameContent extends Component {
   }
 
   render() {
+
     switch (this.state.phase) {
       case Constants.PHASE_PRE_GAME:
         return this.renderPreGame();
@@ -62,6 +64,19 @@ class GameContent extends Component {
       default:
         return <div>Unknown Phase in GameContent.render(): {this.state.phase}</div>;
     }
+  }
+
+  renderLayout = () => {
+    return (
+    <Grid container>
+      <Grid item sm>
+        Players:
+      </Grid>
+      <Grid item lg>
+        Canvas
+      </Grid>
+     </Grid>
+    );
   }
 
   renderPreGame = () => {
