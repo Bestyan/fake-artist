@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import * as GameConfig from "../../game/GameConfig";
+import * as GameConfig from "../../shared/GameConfig";
 import * as communication from "../communication";
 import * as Constants from "../../Constants";
 

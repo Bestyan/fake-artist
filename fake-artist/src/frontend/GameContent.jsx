@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import * as Constants from "../Constants";
-import Player from "../game/Player";
+import Player from "../shared/Player";
 import PreGame from "./01_pregame/PreGame";
 import DrawTurns from "./03_drawing_turns/DrawTurns";
 import PreDraw from "./02_predraw/PreDraw";
 import Voting from "./04_voting/Voting";
 import FakeGuess from "./05_fake_guess/FakeGuess";
+import Summary from "./06_summary/Summary";
 
 class GameContent extends Component {
 
@@ -58,6 +59,9 @@ class GameContent extends Component {
 
       case Constants.PHASE_FAKE_GUESS:
         return this.renderFakeGuess();
+
+      case Constants.PHASE_SUMMARY:
+        return this.renderSummary();
 
       default:
         return <div>Unknown Phase in GameContent.render(): {this.state.phase}</div>;
@@ -117,6 +121,15 @@ class GameContent extends Component {
         term={this.term}
         topic={this.topic}
         advancePhase={this.advancePhase}
+      />
+    );
+  }
+
+  renderSummary = () => {
+    return (
+      <Summary 
+        player={this.player}
+        picture={this.drawnPicture}
       />
     );
   }

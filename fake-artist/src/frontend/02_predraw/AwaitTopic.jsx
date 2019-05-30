@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import * as Constants from "../../Constants.js";
 import PropTypes from "prop-types";
-import * as GameConfig from "../../game/GameConfig";
+import * as GameConfig from "../../shared/GameConfig";
 import * as communication from "../communication";
 
 class AwaitTopic extends Component {

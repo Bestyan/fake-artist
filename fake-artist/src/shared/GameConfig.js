@@ -6,6 +6,9 @@ module.exports = {
     // timeout after a failed fetch before repeating the request
     RETRY_TIMEOUT_MS: 500,
 
+    // timeout for reset after first summary was fetched
+    RESET_TIMEOUT_MS: 10*1000,
+
     // amount of time the "Your role is ..." screen stays
     DISPLAY_ROLE_TIME_MS: 2000,
 

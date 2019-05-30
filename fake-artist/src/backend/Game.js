@@ -1,58 +1,20 @@
 // es5 because node doesn't support es6 exports/imports
 // mixing es6 and module.exports breaks everything, so es5 it is
 
-const GameConfig = require("../game/GameConfig");
-const Player = require("../game/Player");
+const GameConfig = require("../shared/GameConfig");
+const Player = require("../shared/Player");
 const Constants = require("../Constants");
 
 /**
  * manages the serverside game data
  */
 function Game() {
-    this.activePlayer = null;
-
-    this.players = [];
-    this.turnOrder = [];
-
-    this.isStarted = false;
-    this.availableColors = GameConfig.PLAYER_COLORS.slice(0); // clone color array
-    shuffle(this.availableColors);
-
-    this.topic = null;
-    this.term = null;
-
-    /*
-    result = [
-        {
-            player: {id, name, color}
-            votes: 0
-        }, 
-        {...}
-    ]
-     */
-    this.voteState = {
-        result: [],
-        voted: [],
-        isFinished: false
-    };
-
-    this.voteEvaluation = {
-        isTied: false,
-        fake: null
-    };
-
-    this.guessEvaluation = {
-        guess: null,
-        isCorrect: false,
-        isEvaluated: false
-    };
-
-    this.currentDrawingRound = 1;
-    // game is in voting phase
-    this.isVoting = false;
+    this.isReset = false;
+    this.reset();
 }
 
 Game.prototype.addPlayer = function (playerName) {
+    console.log(this.isStarted);
     if (this.isStarted) {
         return null;
     }
@@ -279,7 +241,11 @@ Game.prototype.evaluateVoteResults = function () {
 
     console.log(this.voteEvaluation);
 
-}
+    if (!this.isFakeDetected()) {
+        this.isFinished = true;
+    }
+
+};
 
 Game.prototype.isFakeDetected = function () {
     // evaluation has not taken place
@@ -295,11 +261,11 @@ Game.prototype.isFakeDetected = function () {
     // no tied vote and fake has most votes
     if (this.voteEvaluation.fake.role === "fake") {
         return true;
-    } else{
+    } else {
         // not tied but wrong person has most votes
         return false;
     }
-}
+};
 
 Game.prototype.getNotDetectedBecause = function () {
     if (this.voteEvaluation.isTied) {
@@ -311,7 +277,7 @@ Game.prototype.getNotDetectedBecause = function () {
     }
 
     return "the fake did not receive the most votes";
-}
+};
 
 Game.prototype.evaluateGuess = function (guess, playerId) {
     const player = this.getPlayerById(playerId);
@@ -340,8 +306,68 @@ Game.prototype.evaluateGuess = function (guess, playerId) {
         isEvaluated: true
     };
 
+    this.isFinished = true;
+
     return true;
-}
+};
+
+Game.prototype.reset = function () {
+    if(this.isReset && !this.isFinished){
+        console.log("reset aborted");
+        return;
+    }
+
+    console.log("resetting game");
+    this.activePlayer = null;
+
+    this.players = [];
+    this.turnOrder = [];
+
+    this.isStarted = false;
+    console.log(this.isStarted);
+    this.availableColors = GameConfig.PLAYER_COLORS.slice(0); // clone color array
+    shuffle(this.availableColors);
+    
+    this.topic = null;
+    this.term = null;
+    
+    this.completedLines = [];
+    this.picture = "abc"; // TODO
+    
+    /*
+    result = [
+        {
+            player: {id, name, color}
+            votes: 0
+        }, 
+        {...}
+    ]
+    */
+    this.voteState = {
+        result: [],
+        voted: [],
+        isFinished: false
+    };
+    
+    this.voteEvaluation = {
+        isTied: false,
+        fake: null
+    };
+    
+    this.guessEvaluation = {
+        guess: null,
+        isCorrect: false,
+        isEvaluated: false
+    };
+    
+    this.currentDrawingRound = 1;
+    // game is in voting phase
+    this.isVoting = false;
+    this.isFinished = false;
+
+    // prevents multiple resets
+    this.isReset = true;
+};
 
 module.exports = Game;
 
