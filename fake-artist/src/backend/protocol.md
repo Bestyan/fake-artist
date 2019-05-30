@@ -253,3 +253,43 @@ This must be a POST request because the fake will only receive the topic
             guess: "...",
             is-correct: true | false
         }
+
+## get summary
+
+1. request (`GET_SUMMARY`)
+
+2. response
+
+        {
+            players: [
+                {
+                    id: ${id},
+                    name: ${name},
+                    color: "#...",
+                    role: "artist" | "fake" | "question-master"
+                },
+                {...}
+            ],
+
+            topic: "...",
+            term: "...",
+
+            picture: base64,
+
+            vote-results: [
+                {
+                    player: {
+                        id: ${id},
+                        name: ${name},
+                        color: ${color}
+                    },
+                    votes: ${numberOfVotes}
+                },
+                {...}
+            ],
+
+            is-fake-detected: true | false,
+
+            guess: "...",
+            is-guess-correct: true | false
+        }
