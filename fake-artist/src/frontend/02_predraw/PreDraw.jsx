@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import AwaitTopic from "./AwaitTopic";
 import DeclareTopic from "./DeclareTopic";
-import * as Constants from "../../Constants";
+import * as Constants from "../../shared/Constants";
 import AwaitRole from "./AwaitRole";
 
 class PreDraw extends Component {

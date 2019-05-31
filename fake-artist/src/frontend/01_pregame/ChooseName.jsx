@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import * as communication from "../communication";
 import PropTypes from "prop-types";
-import * as Constants from "../../Constants";
-import Player from "../../game/Player";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
+import * as Constants from "../../shared/Constants";
+import Player from "../../shared/Player";
+import { Box, Button, TextField, Typography } from "@material-ui/core";
 
 class ChooseName extends Component {
 
@@ -13,14 +12,13 @@ class ChooseName extends Component {
   render() {
     return (
       <form onSubmit={event => this.submitName(event)}>
-        
-        <div>
-          <Grid align="center">
-            <h2>Choose a name</h2>
-            <input type="text" placeholder="Your Name" style={{ padding: 9 }} ref={input => this.nameInput = input} />
-            <Button variant="contained" color="inherited" type="submit">go</Button>
-          </Grid>
-        </div>
+        <Box display="flex" flexDirection="column" alignItems="center">
+          <Typography variant="h4">Choose a name</Typography>
+          <Box display="flex" alignItems="center">
+            <TextField type="text" label="Your Name" ref={input => this.nameInput = input} />
+            <Button variant="contained" color="inherit" type="submit">go</Button>
+          </Box>
+        </Box>
       </form>
 
     );
@@ -30,7 +28,7 @@ class ChooseName extends Component {
     event.preventDefault();
 
     const name = this.nameInput.value;
-    if (name.length === 0) {
+    if (name && name.length === 0) {
       return;
     }
 

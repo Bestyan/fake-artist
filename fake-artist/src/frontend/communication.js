@@ -1,4 +1,4 @@
-import * as Constants from "../Constants";
+import * as Constants from "../shared/Constants";
 
 // player chose a name
 export const chooseName = (name, callback, errorCallback) => {

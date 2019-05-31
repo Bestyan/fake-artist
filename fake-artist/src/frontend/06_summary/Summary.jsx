@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import * as communication from "../communication";
 import * as GameConfig from "../../shared/GameConfig";
 import * as Components from "../components/Components";
-import * as Constants from "../../Constants";
+import * as Constants from "../../shared/Constants";
 import PropTypes from "prop-types";
 
 class Summary extends PureComponent {

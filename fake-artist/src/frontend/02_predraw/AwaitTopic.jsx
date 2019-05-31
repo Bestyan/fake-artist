@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import * as Constants from "../../Constants.js";
+import * as Constants from "../../shared/Constants.js";
 import PropTypes from "prop-types";
 import * as GameConfig from "../../shared/GameConfig";
 import * as communication from "../communication";

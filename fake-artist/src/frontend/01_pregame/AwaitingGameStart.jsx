@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import * as communication from "../communication";
 import PropTypes from "prop-types";
-import * as Constants from "../../Constants";
+import * as Constants from "../../shared/Constants";
 import * as GameConfig from "../../shared/GameConfig";
 
 class AwaitingGameStart extends PureComponent {

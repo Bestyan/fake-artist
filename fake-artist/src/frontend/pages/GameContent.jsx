@@ -1,13 +1,14 @@
 import React, { Component } from "react";
-import * as Constants from "../Constants";
-import Player from "../shared/Player";
-import PreGame from "./01_pregame/PreGame";
-import DrawTurns from "./03_drawing_turns/DrawTurns";
-import PreDraw from "./02_predraw/PreDraw";
-import Voting from "./04_voting/Voting";
-import FakeGuess from "./05_fake_guess/FakeGuess";
-import Grid from "@material-ui/core/Grid";
-import Summary from "./06_summary/Summary";
+import * as Constants from "../../shared/Constants";
+import Player from "../../shared/Player";
+import PreGame from "../01_pregame/PreGame";
+import DrawTurns from "../03_drawing_turns/DrawTurns";
+import PreDraw from "../02_predraw/PreDraw";
+import Voting from "../04_voting/Voting";
+import FakeGuess from "../05_fake_guess/FakeGuess";
+import { Box } from "@material-ui/core";
+import Summary from "../06_summary/Summary";
+import PlayerList from "../components/PlayerList";
 
 class GameContent extends Component {
 
@@ -45,6 +46,19 @@ class GameContent extends Component {
   }
 
   render() {
+    return (
+      <Box display="flex">
+        <Box>
+          <PlayerList />
+        </Box>
+        <Box flexGrow="1" style={{ "padding-top": 16 }}>
+          {this.renderContentArea()}
+        </Box>
+      </Box>
+    );
+  }
+
+  renderContentArea = () => {
 
     switch (this.state.phase) {
       case Constants.PHASE_PRE_GAME:
@@ -68,19 +82,6 @@ class GameContent extends Component {
       default:
         return <div>Unknown Phase in GameContent.render(): {this.state.phase}</div>;
     }
-  }
-
-  renderLayout = () => {
-    return (
-    <Grid container>
-      <Grid item sm>
-        Players:
-      </Grid>
-      <Grid item lg>
-        Canvas
-      </Grid>
-     </Grid>
-    );
   }
 
   renderPreGame = () => {
@@ -142,7 +143,7 @@ class GameContent extends Component {
 
   renderSummary = () => {
     return (
-      <Summary 
+      <Summary
         player={this.player}
         picture={this.drawnPicture}
       />

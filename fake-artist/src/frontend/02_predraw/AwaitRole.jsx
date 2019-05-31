@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import * as communication from "../communication";
-import * as Constants from "../../Constants";
+import * as Constants from "../../shared/Constants";
 import * as GameConfig from "../../shared/GameConfig";
 
 class AwaitRole extends Component {
